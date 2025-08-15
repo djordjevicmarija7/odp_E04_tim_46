@@ -1,0 +1,1 @@
+export type Reakcije ='like' | 'dislike' | 'neutral' | null;

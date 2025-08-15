@@ -1,17 +1,81 @@
-import { ReportDto } from "../../Domain/DTOs/reports/ReportDto";
 import { Report } from "../../Domain/models/Report";
-import { IReportRepository } from "../../Domain/repositories/reports/IReportRepository";
+import { Reaction } from "../../Domain/models/Reaction";
+import { ReportRepository } from "../../Database/repositories/ReportRepository";
+import { ReportDto } from "../../Domain/DTOs/reports/ReportDto";
 import { IReportService } from "../../Domain/services/reports/IReportService";
+import { validacijaPrijaveKvara } from "../../WebApi/validators/ReportValidator";
+import { IReportRepository } from "../../Domain/repositories/reports/IReportRepository";
 
 export class ReportService implements IReportService {
-  public constructor(private reportRepository: IReportRepository) {}
+  constructor(private repo: IReportRepository) {}
 
-  async getSviKvarovi(): Promise<ReportDto[]> {
-    const kvarovi: Report[] = await this.reportRepository.getAll();
-    const korisniciDto: ReportDto[] = kvarovi.map(
-      (report) => new ReportDto(report.id, report.naslov, report.opis, report.imagePath, report.adresa, report.status,report.createdAt, report.price, report.masterComment)
-    );
+  async getSviIzvestaji(status?: string | null, sortBy?: 'createdAt' | 'cena', order: 'ASC'|'DESC' = 'DESC'): Promise<ReportDto[]> {
+    const reports: Report[] = await this.repo.getAll(status, sortBy, order);
+    return reports.map(r => new ReportDto(
+      r.id, r.naslov, r.opis, r.imagePath, r.adresa, r.createdAt, r.status, r.cena, r.masterComment
+    ));
+  }
 
-    return korisniciDto;
+  async getPrijaveKorisnika(userId: number, status?: string | null, sortBy?: 'createdAt'|'cena', order: 'ASC'|'DESC' = 'DESC'): Promise<ReportDto[]> {
+    const reports = await this.repo.getByUser(userId, status, sortBy, order);
+    return reports.map(r => new ReportDto(
+      r.id, r.naslov, r.opis, r.imagePath, r.adresa, r.createdAt, r.status, r.cena, r.masterComment,
+    ));
+  }
+
+  async kreirajPrijavu(data: { userId:number; naslov?:string|null; opis:string; imagePath?:string|null; adresa:string }): Promise<ReportDto> {
+  const rezultat = validacijaPrijaveKvara(
+    data.naslov ?? undefined,
+    data.opis,
+    data.adresa
+  );
+
+  if (!rezultat.uspesno) {
+    throw new Error(rezultat.poruka || "Validacija nije prošla.");
+  }
+
+  const r = new Report(
+    0,
+    data.userId,
+    data.naslov ?? "",
+    data.opis,
+    data.imagePath ?? null,
+    data.adresa
+  );
+
+  return await this.repo.create(r);
+  }
+
+  async prihvatiPrijavu(reportId: number, masterId: number): Promise<boolean> {
+    const exists = await this.repo.exists(reportId);
+    if (!exists) throw new Error("Prijava nije pronađena.");
+    const report = await this.repo.getById(reportId);
+    report.status = "Popravka u toku";
+    report.masterId = masterId;
+    const updated = await this.repo.update(report);
+    return updated.id !== 0;
+  }
+
+  async zavrsiPrijavu(reportId: number, masterId: number, saniran: boolean, comment?: string, cena?: number): Promise<boolean> {
+    const exists = await this.repo.exists(reportId);
+    if (!exists) throw new Error("Prijava nije pronađena.");
+
+    const report = await this.repo.getById(reportId);
+    report.masterId = masterId;
+    report.masterComment = comment ?? null;
+    report.cena = cena ?? null;
+    report.status = saniran ? "Saniran" : "Problem nije rešen";
+
+    const updated = await this.repo.update(report);
+    return updated.id !== 0;
+  }
+
+  async dodajReakciju(reportId: number, userId: number, tip: 'like'|'dislike'|'neutral'): Promise<Reaction> {
+    // opciono: proveri da li report postoji
+    const exists = await this.repo.exists(reportId);
+    if (!exists) throw new Error("Prijava nije pronađena.");
+
+    const reaction = new Reaction(0, reportId, userId, tip);
+    return await this.repo.addReaction(reaction);
   }
 }

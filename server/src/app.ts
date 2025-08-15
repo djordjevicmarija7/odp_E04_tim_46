@@ -34,7 +34,7 @@ const reportService: IReportService=new ReportService(reportRepository);
 // WebAPI routes
 const authController = new AuthController(authService);
 const userController = new UserController(userService);
-const reportController=new ReportController(reportService);
+const reportController=new ReportController();
 
 // Registering routes
 app.use('/api/v1', authController.getRouter());
