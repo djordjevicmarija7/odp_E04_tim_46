@@ -3,11 +3,12 @@ import { Link } from "react-router-dom";
 import { validacijaPodatakaAuth } from "../../api_services/validators/auth/AuthValidator";
 import type { AuthFormProps } from "../../types/props/auth_form_props/AuthFormProps";
 import { useAuth } from "../../hooks/auth/useAuthHook";
+import type { UserRole } from "../../types/users/UserRole";
 
 export function RegistracijaForma({ authApi }: AuthFormProps) {
   const [korisnickoIme, setKorisnickoIme] = useState("");
   const [lozinka, setLozinka] = useState("");
-  const [uloga, setUloga] = useState("user");
+  const [uloga, setUloga] = useState<UserRole>("stanar");
   const [greska, setGreska] = useState("");
   const { login } = useAuth();
 
@@ -50,11 +51,11 @@ export function RegistracijaForma({ authApi }: AuthFormProps) {
         />
         <select
           value={uloga}
-          onChange={(e) => setUloga(e.target.value)}
+          onChange={(e) => setUloga(e.target.value as UserRole)}
           className="w-full bg-white/40 px-4 py-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
         >
-          <option value="user">User</option>
-          <option value="admin">Admin</option>
+          <option value="stanar">Stanar</option>
+          <option value="majstor">Majstor</option>
         </select>
         {greska && <p className="text-md text-center text-red-700/80 font-medium">{greska}</p>}
         <button
