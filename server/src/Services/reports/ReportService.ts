@@ -10,7 +10,7 @@ export class ReportService implements IReportService {
   constructor(private repo: IReportRepository) {}
 
   async getSviIzvestaji(status?: string | null, sortBy?: 'createdAt' | 'cena', order: 'ASC'|'DESC' = 'DESC'): Promise<ReportDto[]> {
-    const reports: Report[] = await this.repo.getAll(status, sortBy, order);
+    const reports: ReportDto[] = await this.repo.getAll(status, sortBy, order);
     return reports.map(r => new ReportDto(
       r.id, r.naslov, r.opis, r.imagePath, r.adresa, r.createdAt, r.status, r.cena, r.masterComment
     ));

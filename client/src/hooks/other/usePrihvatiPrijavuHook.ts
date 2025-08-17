@@ -1,0 +1,37 @@
+import { useState, useCallback } from "react";
+import { reportsApi } from "../../api_services/reports/ReportAPIService";
+import { useAuth } from "../../hooks/auth/useAuthHook"; // prilagodi putanju ako je drugačije
+import type { ApiResponse } from "../../types/API/ApiResponse";
+export function usePrihvatiPrijavu() {
+  const { isAuthenticated, isLoading: authLoading, user } = useAuth();
+
+  const [loading, setLoading] = useState<boolean>(authLoading);
+  const [error, setError] = useState<string | null>(null);
+
+  const prihvati = useCallback(
+    async (id: number) => {
+      if (authLoading) return { ok: false, message: "Sačekajte, učitava se autentifikacija." };
+      if (!isAuthenticated) return { ok: false, message: "Niste prijavljeni." };
+      if (!user || user.uloga !== "majstor") return { ok: false, message: "Nemate dozvolu za ovu akciju." };
+
+      setLoading(true);
+      setError(null);
+      try {
+        const res: ApiResponse<null> = await reportsApi.prihvatiPrijavu(id);
+        if (!res.success) {
+          setError(res.message ?? "Greška pri prihvatanju prijave.");
+          return { ok: false, message: res.message };
+        }
+        return { ok: true };
+      } catch (err: any) {
+        setError(err?.message ?? "Neočekivana greška.");
+        return { ok: false, message: err?.message ?? "Neočekivana greška." };
+      } finally {
+        setLoading(false);
+      }
+    },
+    [authLoading, isAuthenticated, user]
+  );
+
+  return { prihvati, loading, error };
+}
