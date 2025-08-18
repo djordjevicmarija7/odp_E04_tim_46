@@ -7,20 +7,20 @@ export class UserRepository implements IUserRepository {
   async create(user: User): Promise<User> {
     try {
       const query = `
-        INSERT INTO users (korisnickoIme, uloga, lozinka) 
+        INSERT INTO users (korisnickoIme, lozinka, uloga) 
         VALUES (?, ?, ?)
       `;
 
       const [result] = await db.execute<ResultSetHeader>(query, [
         user.korisnickoIme,
-        user.uloga,
         user.lozinka,
+        user.uloga
       ]);
 
 
       if (result.insertId) {
         // Vraćamo novog korisnika sa dodeljenim ID-om
-        return new User(result.insertId, user.korisnickoIme, user.uloga, user.lozinka);
+        return new User(result.insertId, user.korisnickoIme, user.lozinka, user.uloga);
       }
 
       // Vraćamo prazan objekat ako kreiranje nije uspešno
@@ -38,7 +38,7 @@ export class UserRepository implements IUserRepository {
 
       if (rows.length > 0) {
         const row = rows[0];
-        return new User(row.id, row.korisnickoIme, row.uloga, row.lozinka);
+        return new User(row.id, row.korisnickoIme, row.lozinka, row.uloga);
       }
 
       return new User();
@@ -50,7 +50,7 @@ export class UserRepository implements IUserRepository {
   async getByUsername(korisnickoIme: string): Promise<User> {
     try {
       const query = `
-        SELECT id, korisnickoIme, uloga, lozinka
+        SELECT id, korisnickoIme, lozinka, uloga
         FROM users 
         WHERE korisnickoIme = ?
       `;
@@ -59,7 +59,7 @@ export class UserRepository implements IUserRepository {
 
       if (rows.length > 0) {
         const row = rows[0];
-        return new User(row.id, row.korisnickoIme, row.uloga, row.lozinka);
+        return new User(row.id, row.korisnickoIme, row.lozinka, row.uloga);
       }
 
       return new User();
@@ -75,7 +75,7 @@ export class UserRepository implements IUserRepository {
       const [rows] = await db.execute<RowDataPacket[]>(query);
 
       return rows.map(
-        (row) => new User(row.id, row.korisnickoIme, row.uloga, row.lozinka)
+        (row) => new User(row.id, row.korisnickoIme, row.lozinka, row.uloga)
       );
     } catch {
       return [];
@@ -93,7 +93,6 @@ export class UserRepository implements IUserRepository {
       const [result] = await db.execute<ResultSetHeader>(query, [
         user.korisnickoIme,
         user.lozinka,
-        user.uloga,
         user.id,
       ]);
 

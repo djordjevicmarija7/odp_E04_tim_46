@@ -20,10 +20,10 @@ export class AuthService implements IAuthService {
     return new UserAuthDataDto(); 
   }
 
-  async registracija(korisnickoIme: string, uloga: UserRole, lozinka: string): Promise<UserAuthDataDto> {
+  async registracija(korisnickoIme: string, lozinka: string,  uloga: UserRole): Promise<UserAuthDataDto> {
     const existingUser = await this.userRepository.getByUsername(korisnickoIme);
     
-    if (existingUser.id !== 0) {
+    if (existingUser && existingUser.id!==0) {
       return new UserAuthDataDto(); 
     }
 
@@ -31,7 +31,7 @@ export class AuthService implements IAuthService {
     const hashedPassword = await bcrypt.hash(lozinka, this.saltRounds);
 
     const newUser = await this.userRepository.create(
-      new User(0, korisnickoIme, uloga, hashedPassword)
+      new User(0, korisnickoIme, hashedPassword, uloga)
     );
 
     if (newUser.id !== 0) {

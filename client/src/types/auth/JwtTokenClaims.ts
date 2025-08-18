@@ -1,5 +1,7 @@
+import type { UserRole } from "../users/UserRole";
+
 export type JwtTokenClaims = {
     id: number;
     korisnickoIme: string;
-    uloga: string;
+    uloga: UserRole;
 }

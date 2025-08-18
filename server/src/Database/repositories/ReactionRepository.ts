@@ -47,7 +47,7 @@ export class ReportRepository implements IReactionRepository {
 
   async getAll(): Promise<Reaction[]> {
     try {
-      const query = `SELECT *FROM reactions ORDER BY id ASC`;
+      const query = `SELECT * FROM reactions ORDER BY id ASC`;
       const [rows] = await db.execute<RowDataPacket[]>(query);
 
       return rows.map(

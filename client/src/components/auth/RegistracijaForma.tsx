@@ -22,6 +22,7 @@ export function RegistracijaForma({ authApi }: AuthFormProps) {
     }
 
     const odgovor = await authApi.registracija(korisnickoIme, lozinka, uloga);
+    console.log("Frontend: registracija odgovor:", odgovor);
     if (odgovor.success && odgovor.data) {
       login(odgovor.data);
     } else {

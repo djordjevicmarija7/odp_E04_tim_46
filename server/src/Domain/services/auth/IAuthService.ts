@@ -5,5 +5,5 @@ export interface IAuthService {
 
   prijava(korisnickoIme: string, lozinka: string): Promise<UserAuthDataDto>;
 
-  registracija(korisnickoIme: string, uloga: UserRole, lozinka: string): Promise<UserAuthDataDto>;
+  registracija(korisnickoIme: string, lozinka: string, uloga: UserRole): Promise<UserAuthDataDto>;
 }

@@ -3,7 +3,8 @@ import type { IAuthAPIService } from "./IAuthAPIService";
 import type { UserRole } from "../../types/users/UserRole";
 import axios from "axios";
 
-const API_URL: string = import.meta.env.VITE_API_URL + "auth";
+const BASE = (import.meta.env.VITE_API_URL ?? "").replace(/\/+$/g, ""); // uklanja trailing slash
+const API_URL: string = `${BASE}/auth`;
 
 export const authApi: IAuthAPIService = {
   async prijava(korisnickoIme: string, lozinka: string): Promise<AuthResponse> {
@@ -41,7 +42,7 @@ export const authApi: IAuthAPIService = {
     } catch (error) {
       let message = "Greška prilikom registracije.";
       if (axios.isAxiosError(error)) {
-        message = error.response?.data?.message || message;
+        message = error.response?.data?.message || error.message || message;
       }
       return {
         success: false,

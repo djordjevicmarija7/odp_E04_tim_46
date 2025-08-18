@@ -66,7 +66,8 @@ export class AuthController {
         return;
       }
 
-      const result = await this.authService.registracija(korisnickoIme, uloga, lozinka);
+      const result = await this.authService.registracija(korisnickoIme, lozinka, uloga);
+      console.log("DEBUG registracija result:", result);
       
       // Proveravamo da li je registracija uspešna
       if (result.id !== 0) {

@@ -1,14 +1,9 @@
 import { useState } from "react";
-import type { IAuthAPIService } from "../../api_services/auth/IAuthAPIService";
-import { RegistracijaForma } from "../../components/autentifikacija/RegistracijaForma";
-import { PrijavaForma } from "../../components/autentifikacija/PrijavaForma";
+import { RegistracijaForma } from "../../components/auth/RegistracijaForma";
+import { PrijavaForma } from "../../components/auth/PrijavaForma";
+import type { AuthFormProps } from "../../types/props/auth_form_props/AuthFormProps";
 
-interface AuthStranicaProps {
-  authApi: IAuthAPIService;
-  onLoginSuccess: () => void;
-}
-
-export default function AuthStranica({ authApi, onLoginSuccess }: AuthStranicaProps) {
+export default function AuthStranica({ authApi, onLoginSuccess }: AuthFormProps) {
   const [jeRegistracija, setJeRegistracija] = useState(false);
 
   return (
