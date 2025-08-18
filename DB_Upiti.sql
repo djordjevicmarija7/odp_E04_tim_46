@@ -2,6 +2,7 @@
 USE DEFAULT_DB;
 
 
+
 -- Tabela korisnika (samo uloge 'stanar' i 'majstor')
 CREATE TABLE IF NOT EXISTS users (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -44,13 +45,12 @@ CREATE TABLE IF NOT EXISTS reactions (
 
 
 
-
 INSERT INTO users (korisnickoIme, lozinka, uloga) VALUES
-('pera',  '$2a$10$E9y6XG5q7F1c0mZP8n9UOe3z7k1b4d7lY5tVJ9zF7bGxK1N2Q3e4W', 'stanar'),
-('mika',  '$2a$10$E9y6XG5q7F1c0mZP8n9UOe3z7k1b4d7lY5tVJ9zF7bGxK1N2Q3e4W', 'majstor'),
-('ana',   '$2a$10$E9y6XG5q7F1c0mZP8n9UOe3z7k1b4d7lY5tVJ9zF7bGxK1N2Q3e4W', 'stanar'),
-('marko', '$2a$10$E9y6XG5q7F1c0mZP8n9UOe3z7k1b4d7lY5tVJ9zF7bGxK1N2Q3e4W', 'majstor'),
-('ivana', '$2a$10$E9y6XG5q7F1c0mZP8n9UOe3z7k1b4d7lY5tVJ9zF7bGxK1N2Q3e4W', 'stanar');
+('pera',  '$2b$10$xmg4FnuUhr1llJWBIiCXrO.L4/elfQID/MMADr3mGpnrSl8axCbuq', 'stanar'),
+('mika',  '$2b$10$xmg4FnuUhr1llJWBIiCXrO.L4/elfQID/MMADr3mGpnrSl8axCbuq', 'majstor'),
+('ana',   '$2b$10$xmg4FnuUhr1llJWBIiCXrO.L4/elfQID/MMADr3mGpnrSl8axCbuq', 'stanar'),
+('marko', '$2b$10$xmg4FnuUhr1llJWBIiCXrO.L4/elfQID/MMADr3mGpnrSl8axCbuq', 'majstor'),
+('ivana', '$2b$10$xmg4FnuUhr1llJWBIiCXrO.L4/elfQID/MMADr3mGpnrSl8axCbuq', 'stanar');
 
 -- Stanar Pera
 INSERT INTO reports (userId, naslov, opis, adresa, status) VALUES
@@ -89,7 +89,4 @@ INSERT INTO reactions (reportId, userId, reakcija) VALUES
 (4, 3, 'neutral');
 
 
-SELECT id, korisnickoIme, lozinka, uloga FROM users;
-UPDATE users
-SET lozinka = '$2b$10$7e9X6y2UjCq/3KqYhQfX.uR2vZk3aPpEeU6e8lYzPjM3S7t2j/8Wy'
-WHERE korisnickoIme = 'pera';
+
