@@ -6,6 +6,7 @@ import { authorize } from "../../Middlewares/authorization/AuthorizeMiddleware";
 import { ReportService } from "../../Services/reports/ReportService";
 import { ReportRepository } from "../../Database/repositories/ReportRepository";
 import { validacijaPrijaveKvara } from "../validators/ReportValidator";
+import { IReportService } from "../../Domain/services/reports/IReportService";
 
 // --- Folder za slike (jednostavna verzija) ---
 const REPORTS_DIR = "uploads/reports";
@@ -18,21 +19,27 @@ const service = new ReportService(repo);
 
 export class ReportController {
   private router: Router;
+  private service: IReportService;
 
-  constructor() {
+  constructor(service: IReportService) {
     this.router = Router();
+    this.service=service;
     this.initializeRoutes();
   }
 
-  private initializeRoutes(): void {
-    this.router.post("/reports", authenticate, this.kreirajPrijavu.bind(this));
-    this.router.get("/reports", authenticate, this.prijaveKorisnika.bind(this));
-    this.router.get("/reports/:id", authenticate, this.detaljiPrijave.bind(this));
-    this.router.get("/reports/all", authenticate, authorize("majstor"), this.svePrijave.bind(this));
-    this.router.put("/reports/:id/accept", authenticate, authorize("majstor"), this.prihvatiPrijavu.bind(this));
-    this.router.put("/reports/:id/finish", authenticate, authorize("majstor"), this.zavrsiPrijavu.bind(this));
-    this.router.post("/reports/:id/reaction", authenticate, this.dodajReakciju.bind(this));
-  }
+ private initializeRoutes(): void {
+  this.router.post("/reports", authenticate, this.kreirajPrijavu.bind(this));
+  this.router.get("/reports", authenticate, this.prijaveKorisnika.bind(this));
+
+  // PRAVILAN REDOSLED: specificne pre parametar ruta
+  this.router.get("/reports/all", authenticate, authorize("majstor"), this.svePrijave.bind(this));
+  this.router.get("/reports/:id", authenticate, this.detaljiPrijave.bind(this));
+
+  this.router.put("/reports/:id/accept", authenticate, authorize("majstor"), this.prihvatiPrijavu.bind(this));
+  this.router.put("/reports/:id/finish", authenticate, authorize("majstor"), this.zavrsiPrijavu.bind(this));
+  this.router.post("/reports/:id/reaction", authenticate, this.dodajReakciju.bind(this));
+}
+
 
   private async kreirajPrijavu(req: Request, res: Response): Promise<void> {
     try {
