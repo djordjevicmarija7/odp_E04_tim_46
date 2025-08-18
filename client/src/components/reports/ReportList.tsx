@@ -6,10 +6,14 @@ interface Props {
 }
 
 export function ReportList({ reports }: Props) {
-  if (reports.length === 0) return <p>Nema prijava</p>;
+  if (reports.length === 0)
+    return <p className="text-center text-gray-500 italic">Нема пријава</p>;
+
   return (
-    <div className="report-list">
-      {reports.map(r => <ReportCard key={r.id} report={r} />)}
+    <div className="grid gap-4">
+      {reports.map((r) => (
+        <ReportCard key={r.id} report={r} />
+      ))}
     </div>
   );
 }

@@ -6,10 +6,11 @@ interface Props {
 
 export function ReactionButtons({ onReact }: Props) {
   return (
-    <div className="flex gap-2 mt-4">
-      <button onClick={() => onReact("like")}>👍</button>
-      <button onClick={() => onReact("dislike")}>👎</button>
-            <button onClick={() => onReact("neutral")}>:/</button>
+    <div className="flex gap-3 mt-4">
+      <button onClick={() => onReact("like")} className="btn-secondary">👍</button>
+      <button onClick={() => onReact("dislike")} className="btn-secondary">👎</button>
+      <button onClick={() => onReact("neutral")} className="btn-secondary">😐</button>
     </div>
   );
 }
+

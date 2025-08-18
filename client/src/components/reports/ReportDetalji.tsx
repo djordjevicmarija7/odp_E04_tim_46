@@ -19,12 +19,23 @@ useEffect(() => {
   if (!report) return <p>Učitavanje...</p>;
 
   return (
-    <div>
-      <h2>{report.naslov}</h2>
-      <p>{report.opis}</p>
-      <span>Status: {report.status}</span>
-      {(report.status === "Saniran" || report.status === "Problem nije rešen") &&
-        <ReactionButtons onReact={(r) => reportsApi.dodajReakciju(reportId, r)} />}
+    <div className="card">
+      <h2 className="text-2xl font-bold mb-2">{report.naslov}</h2>
+      <p className="text-gray-700 mb-4">{report.opis}</p>
+      <span
+        className={
+          report.status === "Saniran"
+            ? "badge-green"
+            : report.status === "Popravka u toku"
+            ? "badge-yellow"
+            : "badge-red"
+        }
+      >
+        {report.status}
+      </span>
+      {(report.status === "Saniran" || report.status === "Problem nije rešen") && (
+        <ReactionButtons onReact={(r) => reportsApi.dodajReakciju(reportId, r)} />
+      )}
     </div>
   );
 }

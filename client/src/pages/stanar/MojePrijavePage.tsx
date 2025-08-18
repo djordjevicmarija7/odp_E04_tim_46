@@ -19,7 +19,7 @@ export default function MojePrijavePage({ reportsApi }: Props) {
 
   return (
     <main className="page-wrapper">
-      <h1>Moje prijave</h1>
+      <h1 className="text-3xl font-bold text-gray-900 mb-6">📌 Moje prijave</h1>
       <FilterBar onSearch={(query) => setSearch(query)} />
       <ReportList
         reports={reports.filter((r) =>
@@ -27,5 +27,6 @@ export default function MojePrijavePage({ reportsApi }: Props) {
         )}
       />
     </main>
+
   );
 }

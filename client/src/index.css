@@ -1,1 +1,78 @@
 @import "tailwindcss";
+/* Tailwind v4 imports */
+@import "tailwindcss/preflight";
+@import "tailwindcss/utilities";
+
+/* 🌟 Global layout */
+body {
+  @apply bg-gray-50 text-gray-800 font-sans;
+}
+
+.page-wrapper {
+  @apply max-w-5xl mx-auto p-6;
+}
+
+/* 🌟 Naslovi */
+h1 {
+  @apply text-3xl font-bold mb-6 text-gray-900;
+}
+
+h2 {
+  @apply text-2xl font-semibold mb-4 text-gray-800;
+}
+
+h3 {
+  @apply text-xl font-semibold mb-2 text-gray-700;
+}
+
+/* 🌟 Dugmad */
+.btn-primary {
+  @apply px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold 
+         shadow hover:bg-blue-700 transition;
+}
+
+.btn-secondary {
+  @apply px-4 py-2 rounded-lg bg-gray-200 text-gray-800 font-medium 
+         hover:bg-gray-300 transition;
+}
+
+button:disabled {
+  @apply opacity-50 cursor-not-allowed;
+}
+
+/* 🌟 Input polja */
+input, textarea, select {
+  @apply border border-gray-300 rounded-lg px-3 py-2 w-full 
+         focus:outline-none focus:ring-2 focus:ring-blue-500 
+         shadow-sm bg-white;
+}
+
+textarea {
+  @apply resize-none min-h-[100px];
+}
+
+/* 🌟 Error poruke */
+.error-text {
+  @apply text-red-600 text-sm mt-1;
+}
+
+/* 🌟 Card za prikaz prijava */
+.report-card {
+  @apply border rounded-lg shadow-sm bg-white p-4 mb-4 
+         hover:shadow-md transition;
+}
+
+.report-list {
+  @apply grid gap-4;
+}
+
+/* 🌟 Filter bar */
+.filter-bar {
+  @apply mb-6 flex justify-center;
+}
+
+/* 🌟 Reaction buttons */
+.reaction-buttons button {
+  @apply text-lg px-3 py-1 rounded-full border shadow-sm bg-white 
+         hover:bg-gray-100 transition;
+}
