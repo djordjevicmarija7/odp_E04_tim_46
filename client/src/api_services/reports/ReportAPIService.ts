@@ -10,12 +10,16 @@ import type { IReportsAPIService } from "../reports/IReportAPIService";
 import axios from "axios";
 import { PročitajVrednostPoKljuču } from "../../helpers/local_storage"; // prilagodi putanju ako treba
 
-const API_URL: string = (import.meta.env.VITE_API_URL ?? "http://localhost:4000/api/v1/") + "reports";
+// Normalize API base so it ALWAYS ends with a slash, then append 'reports'
+const RAW_API = import.meta.env.VITE_API_URL ?? "http://localhost:4000/api/v1";
+const API_BASE = RAW_API.endsWith("/") ? RAW_API : RAW_API + "/";
+const API_URL: string = API_BASE + "reports";
 
 export const reportsApi: IReportsAPIService = {
   async getSviIzvestaji(params?: QueryParams): Promise<ApiResponse<ReportDto[]>> {
     try {
       const token = PročitajVrednostPoKljuču("authToken");
+      // endpoint: /api/v1/reports/all
       const res = await axios.get<ApiResponse<ReportDto[]>>(`${API_URL}/all`, {
         params,
         headers: token ? { Authorization: `Bearer ${token}` } : undefined,
@@ -33,6 +37,7 @@ export const reportsApi: IReportsAPIService = {
   async getPrijaveKorisnika(params?: QueryParams): Promise<ApiResponse<ReportDto[]>> {
     try {
       const token = PročitajVrednostPoKljuču("authToken");
+      // endpoint: /api/v1/reports
       const res = await axios.get<ApiResponse<ReportDto[]>>(`${API_URL}`, {
         params,
         headers: token ? { Authorization: `Bearer ${token}` } : undefined,
