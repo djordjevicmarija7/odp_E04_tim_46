@@ -13,7 +13,7 @@ export interface IReportsAPIService {
   getPrijaveKorisnika(params?: QueryParams): Promise<ApiResponse<ReportDto[]>>;
 
  
-  kreirajPrijavu(payload: CreateReportPayload): Promise<ApiResponse<ReportDto>>;
+  kreirajPrijavu(payload: CreateReportPayload | FormData): Promise<ApiResponse<ReportDto>>;
 
   getPrijavaById(id: number): Promise<ApiResponse<ReportDto>>;
 

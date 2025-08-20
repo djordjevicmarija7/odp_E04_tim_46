@@ -52,7 +52,7 @@ export const reportsApi: IReportsAPIService = {
     }
   },
 
-  async kreirajPrijavu(payload: CreateReportPayload): Promise<ApiResponse<ReportDto>> {
+  async kreirajPrijavu(payload: CreateReportPayload | FormData): Promise<ApiResponse<ReportDto>> {
     try {
       const token = PročitajVrednostPoKljuču("authToken");
       const res = await axios.post<ApiResponse<ReportDto>>(`${API_URL}`, payload, {

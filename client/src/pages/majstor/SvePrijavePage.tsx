@@ -18,26 +18,16 @@ export default function SvePrijavePage({ reportsApi }: Props) {
     });
   }, [reportsApi]);
 
+  const filtered = reports.filter((r) =>
+    r.opis.toLowerCase().includes(search.toLowerCase()) ||
+    r.naslov.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
     <main className="page-wrapper">
-      {/* Naslov */}
-      <h1 className="text-3xl font-bold text-gray-900 mb-8 flex items-center gap-2">
-        📋 Sve prijave
-      </h1>
-
-      {/* Search bar */}
-      <div className="mb-6">
-        <FilterBar onSearch={(query) => setSearch(query)} />
-      </div>
-
-      {/* Lista prijava */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <ReportList
-          reports={reports.filter((r) =>
-            r.opis.toLowerCase().includes(search.toLowerCase())
-          )}
-        />
-      </div>
+      <h1 className="text-3xl font-bold text-gray-900 mb-8 flex items-center gap-2">📋 Sve prijave</h1>
+      <FilterBar onSearch={(q) => setSearch(q)} />
+      <ReportList reports={filtered} />
     </main>
   );
 }

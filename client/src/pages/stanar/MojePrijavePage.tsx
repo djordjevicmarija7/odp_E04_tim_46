@@ -7,6 +7,7 @@ import type { ReportDto } from "../../models/reports/ReportDto";
 interface Props {
   reportsApi: IReportsAPIService;
 }
+
 export default function MojePrijavePage({ reportsApi }: Props) {
   const [reports, setReports] = useState<ReportDto[]>([]);
   const [search, setSearch] = useState("");
@@ -17,16 +18,16 @@ export default function MojePrijavePage({ reportsApi }: Props) {
     });
   }, [reportsApi]);
 
+  const filtered = reports.filter((r) =>
+    r.opis.toLowerCase().includes(search.toLowerCase()) ||
+    r.naslov.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
     <main className="page-wrapper">
-      <h1 className="text-3xl font-bold text-gray-900 mb-6">📌 Moje prijave</h1>
-      <FilterBar onSearch={(query) => setSearch(query)} />
-      <ReportList
-        reports={reports.filter((r) =>
-          r.opis.toLowerCase().includes(search.toLowerCase())
-        )}
-      />
+      <h1 className="text-3xl font-bold text-gray-900 mb-8 flex items-center gap-2">📌 Moje prijave</h1>
+      <FilterBar onSearch={(q) => setSearch(q)} />
+      <ReportList reports={filtered} />
     </main>
-
   );
 }

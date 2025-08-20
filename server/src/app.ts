@@ -25,7 +25,7 @@ app.use(express.json());
 // <<< SERVIRANJE STATIČKIH FAJLOVA (uploads) — OBAVEZNO pre registracije ruta
 const uploadsPath = path.resolve(process.cwd(), 'uploads');
 console.log('[app] Serving static files from:', uploadsPath);
-app.use('/uploads', express.static(uploadsPath));
+app.use('/api/v1/uploads', express.static(uploadsPath));
 // -----------------------------------------
 
 // Repositories
