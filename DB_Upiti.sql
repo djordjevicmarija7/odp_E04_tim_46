@@ -1,8 +1,6 @@
 -- Koriscenje default baze podataka
 USE DEFAULT_DB;
 
-
-
 -- Tabela korisnika (samo uloge 'stanar' i 'majstor')
 CREATE TABLE IF NOT EXISTS users (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -42,9 +40,7 @@ CREATE TABLE IF NOT EXISTS reactions (
   CONSTRAINT fk_reviews_user FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-
-
-
+-- Seed korisnici (password hash primer)
 INSERT INTO users (korisnickoIme, lozinka, uloga) VALUES
 ('pera',  '$2b$10$xmg4FnuUhr1llJWBIiCXrO.L4/elfQID/MMADr3mGpnrSl8axCbuq', 'stanar'),
 ('mika',  '$2b$10$xmg4FnuUhr1llJWBIiCXrO.L4/elfQID/MMADr3mGpnrSl8axCbuq', 'majstor'),
@@ -52,23 +48,23 @@ INSERT INTO users (korisnickoIme, lozinka, uloga) VALUES
 ('marko', '$2b$10$xmg4FnuUhr1llJWBIiCXrO.L4/elfQID/MMADr3mGpnrSl8axCbuq', 'majstor'),
 ('ivana', '$2b$10$xmg4FnuUhr1llJWBIiCXrO.L4/elfQID/MMADr3mGpnrSl8axCbuq', 'stanar');
 
--- Stanar Pera
-INSERT INTO reports (userId, naslov, opis, adresa, status) VALUES
-(1, 'Pokvaren bojler', 'Bojler ne greje vodu već 3 dana.', 'Bulevar 12', 'Kreiran'),
-(1, 'Prozor ne dihtuje', 'Zimi duva hladan vazduh, treba zamena gume.', 'Bulevar 12', 'Popravka u toku');
+-- Stanar Pera (imagePath polja su NULL ili primer putanje)
+INSERT INTO reports (userId, naslov, opis, imagePath, adresa, status) VALUES
+(1, 'Pokvaren bojler', 'Bojler ne greje vodu već 3 dana.', NULL, 'Bulevar 12', 'Kreiran'),
+(1, 'Prozor ne dihtuje', 'Zimi duva hladan vazduh, treba zamena gume.', '/uploads/reports/prozor-dihtovanje.jpg', 'Bulevar 12', 'Popravka u toku');
 
 -- Stanarka Ana
-INSERT INTO reports (userId, naslov, opis, adresa, status) VALUES
-(3, 'Slavina curi', 'Slavina u kuhinji kaplje stalno.', 'Kneza Miloša 45', 'Saniran'),
-(3, 'Pokvaren interfon', 'Ne radi zvono na interfonu, niko ne može da pozvoni.', 'Kneza Miloša 45', 'Kreiran'),
-(3, 'Lomljiva vrata od lifta', 'Vrata lifta se teško zatvaraju, može da bude opasno.', 'Kneza Miloša 45', 'Popravka u toku');
+INSERT INTO reports (userId, naslov, opis, imagePath, adresa, status) VALUES
+(3, 'Slavina curi', 'Slavina u kuhinji kaplje stalno.', '/uploads/reports/slavina-curi.jpg', 'Kneza Miloša 45', 'Saniran'),
+(3, 'Pokvaren interfon', 'Ne radi zvono na interfonu, niko ne može da pozvoni.', NULL, 'Kneza Miloša 45', 'Kreiran'),
+(3, 'Lomljiva vrata od lifta', 'Vrata lifta se teško zatvaraju, može da bude opasno.', '/uploads/reports/vrata-lifta.jpg', 'Kneza Miloša 45', 'Popravka u toku');
 
 -- Stanarka Ivana
-INSERT INTO reports (userId, naslov, opis, adresa, status) VALUES
-(5, 'Kvar na električnoj instalaciji', 'Nestaje struja u dnevnoj sobi kad se uključi klima.', 'Nemanjina 7', 'Kreiran'),
-(5, 'Curenje krova', 'Krov prokišnjava na više mesta tokom kiše.', 'Nemanjina 7', 'Kreiran');
+INSERT INTO reports (userId, naslov, opis, imagePath, adresa, status) VALUES
+(5, 'Kvar na električnoj instalaciji', 'Nestaje struja u dnevnoj sobi kad se uključi klima.', NULL, 'Nemanjina 7', 'Kreiran'),
+(5, 'Curenje krova', 'Krov prokišnjava na više mesta tokom kiše.', '/uploads/reports/curenje-krova.jpg', 'Nemanjina 7', 'Kreiran');
 
--- Majstor Mika popravio prozor (report 2)
+-- Majstor Mika popravio prozor (report 2) - ažuriran, već ima imagePath od insert-a iznad
 UPDATE reports
 SET masterId = 2, masterComment = 'Zamenjena guma, sada dobro dihtuje.', cena = 2500, status = 'Saniran'
 WHERE id = 2;
@@ -83,10 +79,10 @@ UPDATE reports
 SET masterId = 2, masterComment = 'Potrebna zamena celog zvona, delovi poručeni.', cena = 3500, status = 'Popravka u toku'
 WHERE id = 4;
 
+-- Dodatne UPDATE primjeri: postavljanje slike za postojece entry-e (ako želiš naknadno)
+-- UPDATE reports SET imagePath = '/uploads/reports/primer.jpg' WHERE id = 1;
+
 INSERT INTO reactions (reportId, userId, reakcija) VALUES
 (2, 1, 'like'),
 (3, 3, 'like'),
 (4, 3, 'neutral');
-
-
-
