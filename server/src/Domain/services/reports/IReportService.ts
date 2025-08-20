@@ -35,10 +35,11 @@ export interface IReportService {
     comment?: string,
     cena?: number
   ): Promise<boolean>;
-
+getReactionForUser(reportId: number, userId: number): Promise<Reaction | null>;
+getReactionsForUserForReports(reportIds: number[], userId: number): Promise<Reaction[]>;
   dodajReakciju(
     reportId: number,
     userId: number,
-    tip: "like" | "dislike" | "neutral"
+    reakcija: "like" | "dislike" | "neutral"
   ): Promise<Reaction>;
 }

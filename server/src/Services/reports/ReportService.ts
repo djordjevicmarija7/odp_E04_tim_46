@@ -5,9 +5,14 @@ import { ReportDto } from "../../Domain/DTOs/reports/ReportDto";
 import { IReportService } from "../../Domain/services/reports/IReportService";
 import { validacijaPrijaveKvara } from "../../WebApi/validators/ReportValidator";
 import { IReportRepository } from "../../Domain/repositories/reports/IReportRepository";
+import { ReactionRepository } from "../../Database/repositories/ReactionRepository";
+import { IReactionRepository } from "../../Domain/repositories/reactions/IReactonRepository";
 
 export class ReportService implements IReportService {
-  constructor(private repo: IReportRepository) {}
+  private reactionRepo: ReactionRepository;
+  constructor(private repo: IReportRepository) {
+    this.reactionRepo = new ReactionRepository();
+  }
 
   async getSviIzvestaji(status?: string | null, sortBy?: 'createdAt' | 'cena', order: 'ASC'|'DESC' = 'DESC'): Promise<ReportDto[]> {
     const reports: ReportDto[] = await this.repo.getAll(status, sortBy, order);
@@ -69,13 +74,35 @@ export class ReportService implements IReportService {
     const updated = await this.repo.update(report);
     return updated.id !== 0;
   }
+  async getReactionForUser(reportId: number, userId: number): Promise<Reaction | null> {
+    return await this.reactionRepo.getByReportAndUser(reportId, userId);
+  }
 
-  async dodajReakciju(reportId: number, userId: number, tip: 'like'|'dislike'|'neutral'): Promise<Reaction> {
-    // opciono: proveri da li report postoji
-    const exists = await this.repo.exists(reportId);
-    if (!exists) throw new Error("Prijava nije pronađena.");
+  // Bulk varijanta: za listu reportId vrati sve reakcije ovog usera
+  async getReactionsForUserForReports(reportIds: number[], userId: number): Promise<Reaction[]> {
+    return await this.reactionRepo.getByReportIdsAndUser(reportIds, userId);
+  }
 
-    const reaction = new Reaction(0, reportId, userId, tip);
-    return await this.repo.addReaction(reaction);
+  async dodajReakciju(reportId: number, userId: number, reakcija: 'like'|'dislike'|'neutral'): Promise<Reaction> {
+ const report = await this.repo.getById(reportId);
+  if (!report || report.id === 0) {
+    throw new Error("Prijava nije pronađena.");
+  }
+
+  // primer provere (opciono): dozvoli reakciju samo ako je status Saniran
+  // if (report.status !== "Saniran") throw new Error("Možete reagovati samo na sanirane prijave.");
+
+  // Sastavi objekat reakcije
+  const reaction: Reaction = {
+    id: 0, // ili ostavi undefined/0 jer će DB generisati id
+    reportId,
+    userId,
+    reakcija: reakcija,
+    createdAt: new Date().toISOString()
+  };
+
+  // OVDE je tvoja linija koju si pomenuo:
+  // pretpostavka: ReportRepository ima metodu addReaction koja radi upsert/insert
+  return await this.repo.addReaction(reaction);
   }
 }

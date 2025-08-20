@@ -1,5 +1,5 @@
 import type { ReportStatus } from "../../types/reports/ReportStatus";
-
+import type { ReactionType } from "../../types/reactions/ReactionType";
 export interface ReportDto {
         id: number,
         naslov: string,
@@ -10,4 +10,5 @@ export interface ReportDto {
         status: ReportStatus,
         cena: number,
         masterComment: string,
+        userReaction?: ReactionType | null;
 }

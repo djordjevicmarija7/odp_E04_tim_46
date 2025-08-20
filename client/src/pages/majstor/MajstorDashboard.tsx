@@ -1,4 +1,4 @@
-import { Link, Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { useLogout } from "../../hooks/other/useLogoutHook";
 
 export default function MajstorDashboard() {
@@ -18,16 +18,6 @@ export default function MajstorDashboard() {
 
       {/* Naslov */}
       <h1 className="text-3xl font-bold text-gray-900 mb-6">👷 Добродошли, мајсторе!</h1>
-
-      {/* Linkovi ka stranicama (RELATIVE putevi) */}
-      <div className="flex flex-col md:flex-row justify-center gap-4 mb-6">
-        <Link to="sve-prijave" className="btn-primary w-full md:w-auto">
-          📋 Све пријаве
-        </Link>
-        <Link to="zavrsi-prijavu/1" className="btn-primary w-full md:w-auto">
-          ✅ Заврши пријаву (primer id 1)
-        </Link>
-      </div>
 
       {/* OVDE se prikazuju child route komponentе */}
       <div className="mt-6">

@@ -9,7 +9,7 @@ import { ReportService } from "../../Services/reports/ReportService";
 import { ReportRepository } from "../../Database/repositories/ReportRepository";
 import { validacijaPrijaveKvara } from "../validators/ReportValidator";
 import { IReportService } from "../../Domain/services/reports/IReportService";
-
+import {validacijaZavrsiPrijave} from "../validators/FinishReportValidator"
 // --- Folder za slike (jednostavna verzija) ---
 const REPORTS_DIR = "uploads/reports";
 if (!fs.existsSync(REPORTS_DIR)) {
@@ -138,6 +138,14 @@ export class ReportController {
         order === "ASC" ? "ASC" : "DESC"
       );
 
+
+const enriched = await Promise.all(
+  reports.map(async (r: any) => {
+    const reaction = await service.getReactionForUser(r.id, user.id);
+    return { ...r, userReaction: reaction ? reaction.reakcija : null };
+  })
+);
+
       res.status(200).json({ success: true, data: reports });
     } catch (error: any) {
       console.error("Error in prijaveKorisnika:", error);
@@ -159,7 +167,11 @@ export class ReportController {
         return;
       }
 
-      res.status(200).json({ success: true, data: report });
+       const user = (req as any).user;
+    const reaction = user ? await service.getReactionForUser(id, user.id) : null;
+    const enriched = { ...report, userReaction: reaction ? reaction.reakcija : null };
+
+      res.status(200).json({ success: true, data: enriched });
     } catch (error: any) {
       console.error("Error in detaljiPrijave:", error);
       res.status(500).json({ success: false, message: error.message || "Greška pri dohvatanju detalja." });
@@ -209,12 +221,14 @@ export class ReportController {
     try {
       const master = (req as any).user;
       const id = Number(req.params.id);
-      if (isNaN(id) || id <= 0) {
-        res.status(400).json({ success: false, message: "Neispravan ID." });
-        return;
-      }
+      
 
       const { saniran, comment, cena } = req.body;
+      const valid = validacijaZavrsiPrijave(comment, cena);
+if (!valid.uspesno) {
+  res.status(400).json({ success: false, message: valid.poruka });
+  return;
+}
       const ok = await service.zavrsiPrijavu(id, master.id, Boolean(saniran), comment, cena ? Number(cena) : undefined);
 
       if (!ok) {
@@ -238,13 +252,17 @@ export class ReportController {
         return;
       }
 
-      const { tip } = req.body;
-      if (!tip || !["like", "dislike", "neutral"].includes(tip)) {
+      const { reakcija } = req.body;
+      if (!reakcija || !["like", "dislike", "neutral"].includes(reakcija)) {
         res.status(400).json({ success: false, message: "Nepoznat tip reakcije." });
         return;
       }
 
-      const reaction = await service.dodajReakciju(id, user.id, tip);
+      const reaction = await service.dodajReakciju(id, user.id, reakcija);
+          if (!reaction) {
+      res.status(500).json({ success: false, message: "Nije uspelo čuvanje reakcije." });
+      return;
+    }
       res.status(201).json({ success: true, data: reaction });
     } catch (error: any) {
       console.error("Error in dodajReakciju:", error);

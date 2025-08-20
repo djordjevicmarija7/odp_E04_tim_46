@@ -116,10 +116,10 @@ export const reportsApi: IReportsAPIService = {
     }
   },
 
-  async dodajReakciju(id: number, tip: ReactionType): Promise<ApiResponse<null>> {
+  async dodajReakciju(id: number, reakcija: ReactionType): Promise<ApiResponse<null>> {
     try {
       const token = PročitajVrednostPoKljuču("authToken");
-      const res = await axios.post<ApiResponse<null>>(`${API_URL}/${id}/reaction`, { tip }, {
+      const res = await axios.post<ApiResponse<null>>(`${API_URL}/${id}/reaction`, { reakcija }, {
         headers: token ? { Authorization: `Bearer ${token}` } : undefined,
       });
       return res.data;

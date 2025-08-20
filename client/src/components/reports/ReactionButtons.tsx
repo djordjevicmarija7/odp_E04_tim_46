@@ -13,4 +13,3 @@ export function ReactionButtons({ onReact }: Props) {
     </div>
   );
 }
-

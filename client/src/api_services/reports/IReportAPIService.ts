@@ -20,5 +20,5 @@ export interface IReportsAPIService {
   prihvatiPrijavu(id: number): Promise<ApiResponse<null>>;
 
   zavrsiPrijavu(id: number, body: FinishReportPayload): Promise<ApiResponse<null>>;
-  dodajReakciju(id: number, tip: ReactionType): Promise<ApiResponse<null>>;
+  dodajReakciju(id: number, reakcija: ReactionType): Promise<ApiResponse<null>>;
 }

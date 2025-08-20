@@ -55,7 +55,7 @@ function App() {
         {/* Child rute (RELATIVE: bez prefiksa /majstor-dashboard) */}
         <Route
           path="sve-prijave"
-          element={<SvePrijavePage reportsApi={reportsApi} />}
+          element={<SvePrijavePage/>}
         />
         <Route
           path="zavrsi-prijavu/:id"
@@ -68,7 +68,7 @@ function App() {
         path="/moje-prijave"
         element={
           <ProtectedRoute requiredRole="stanar">
-            <MojePrijavePage reportsApi={reportsApi} />
+            <MojePrijavePage />
           </ProtectedRoute>
         }
       />

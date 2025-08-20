@@ -1,114 +1,79 @@
-import { IReactionRepository } from "../../Domain/repositories/reactions/IReactonRepository";
-import { Reaction } from "../../Domain/models/Reaction";
 import { RowDataPacket, ResultSetHeader } from "mysql2";
 import db from "../connection/DbConnectionPool";
+import type { Reaction } from "../../Domain/models/Reaction";
+import type { Reakcije } from "../../Domain/types/Reakcije";
 
-export class ReportRepository implements IReactionRepository {
-  async create(reaction: Reaction): Promise<Reaction> {
+export class ReactionRepository {
+  async getByReportAndUser(reportId: number, userId: number): Promise<Reaction | null> {
     try {
+      const query = `SELECT id, reportId, userId, reakcija as reakcija, createdAt FROM reactions WHERE reportId = ? AND userId = ? LIMIT 1`;
+      const [rows] = await db.execute<RowDataPacket[]>(query, [reportId, userId]);
+      if (!rows || rows.length === 0) return null;
+      const r = rows[0];
+      return {
+        id: r.id,
+        reportId: r.reportId,
+        userId: r.userId,
+        reakcija: r.reakcija as Reakcije,
+        createdAt: r.createdAt,
+      } as Reaction;
+    } catch (err) {
+      console.error("ReactionRepository.getByReportAndUser error:", err);
+      return null;
+    }
+  }
+
+  // Upsert (insert ili update) - koristi UNIQUE (reportId,userId)
+  async upsert(reportId: number, userId: number, reakcija: Reakcije): Promise<Reaction | null> {
+    try {
+      const now = new Date().toISOString().slice(0, 19).replace("T", " ");
       const query = `
-        INSERT INTO reactions ( reportId, userId, reakcija) 
-        VALUES ( ?, ?, ?)
+        INSERT INTO reactions (reportId, userId, reakcija, createdAt)
+        VALUES (?, ?, ?, ?)
+        ON DUPLICATE KEY UPDATE reakcija = VALUES(reakcija), createdAt = VALUES(createdAt)
       `;
-
-      const [result] = await db.execute<ResultSetHeader>(query, [
-        reaction.reportId,
-        reaction.userId,
-        reaction.reakcija,
-      ]);
-
-
-      if (result.insertId) {
-        return new Reaction(result.insertId,reaction.reportId, reaction.userId,reaction.reakcija);
-      }
-
-      return new Reaction();
-    } catch (error) {
-      console.error('Error creating reaction:', error);
-      return new Reaction();
+      await db.execute<ResultSetHeader>(query, [reportId, userId, reakcija, now]);
+      return await this.getByReportAndUser(reportId, userId);
+    } catch (err) {
+      console.error("ReactionRepository.upsert error:", err);
+      return null;
     }
   }
 
-  async getById(id: number): Promise<Reaction> {
+  // Bulk dohvatanje svih reakcija za grupu reportId-a za jednog usera
+  async getByReportIdsAndUser(reportIds: number[], userId: number): Promise<Reaction[]> {
+    if (!reportIds || reportIds.length === 0) return [];
     try {
-      const query = `SELECT *FROM reactions WHERE id = ?`;
-      const [rows] = await db.execute<RowDataPacket[]>(query, [id]);
-
-      if (rows.length > 0) {
-        const row = rows[0];
-        return new Reaction(row.id, row.reportId ,row.userId, row.reakcija);
-      }
-
-      return new Reaction();
-    } catch {
-      return new Reaction();
-    }
-  }
-
-  async getAll(): Promise<Reaction[]> {
-    try {
-      const query = `SELECT * FROM reactions ORDER BY id ASC`;
-      const [rows] = await db.execute<RowDataPacket[]>(query);
-
-      return rows.map(
-        (row) => new Reaction(row.id, row.reportId ,row.userId, row.reakcija)
-      );
-    } catch {
+      const placeholders = reportIds.map(() => "?").join(",");
+      const query = `SELECT id, reportId, userId, reakcija as reakcija, createdAt FROM reactions WHERE reportId IN (${placeholders}) AND userId = ?`;
+      const params = [...reportIds, userId];
+      const [rows] = await db.execute<RowDataPacket[]>(query, params);
+      return rows.map((r) => ({
+        id: r.id,
+        reportId: r.reportId,
+        userId: r.userId,
+        reakcija: r.reakcija as Reakcije,
+        createdAt: r.createdAt,
+      } as Reaction));
+    } catch (err) {
+      console.error("ReactionRepository.getByReportIdsAndUser error:", err);
       return [];
     }
   }
 
-  async update(reaction: Reaction): Promise<Reaction> {
+  
+  async countByReport(reportId: number) {
     try {
-      const query = `
-        UPDATE reactions 
-        SET reakcija = ?
-        WHERE id = ?
-      `;
-
-      const [result] = await db.execute<ResultSetHeader>(query, [
-        reaction.reakcija,
-        reaction.id
-      ]);
-
-      if (result.affectedRows > 0) {
-        return reaction;
+      const query = `SELECT reakcija, COUNT(*) as cnt FROM reactions WHERE reportId = ? GROUP BY reakcija`;
+      const [rows] = await db.execute<RowDataPacket[]>(query, [reportId]);
+      const res: Record<string, number> = { like: 0, dislike: 0, neutral: 0 };
+      for (const r of rows) {
+        res[r.reakcija] = Number(r.cnt);
       }
-
-      return new Reaction();
-    } catch {
-      return new Reaction();
-    }
-  }
-
-  async delete(id: number): Promise<boolean> {
-    try {
-      const query = `
-        DELETE FROM reactions 
-        WHERE id = ?
-      `;
-
-      const [result] = await db.execute<ResultSetHeader>(query, [id]);
-
-      return result.affectedRows > 0;
-    } catch {
-      return false;
-    }
-  }
-
-  async exists(id: number): Promise<boolean> {
-    try {
-      const query = `
-        SELECT COUNT(*) as count 
-        FROM reactions 
-        WHERE id = ?
-      `;
-
-      const [rows] = await db.execute<RowDataPacket[]>(query, [id]);
-
-      return rows[0].count > 0;
-    } catch {
-      return false;
+      return res;
+    } catch (err) {
+      console.error("ReactionRepository.countByReport error:", err);
+      return { like: 0, dislike: 0, neutral: 0 };
     }
   }
 }

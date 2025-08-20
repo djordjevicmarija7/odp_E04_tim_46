@@ -12,14 +12,14 @@ export function useDodajReakciju() {
   const [error, setError] = useState<string | null>(null);
 
   const dodaj = useCallback(
-    async (id: number, tip: ReactionType) => {
+    async (id: number, reakcija: ReactionType) => {
       if (authLoading) return { ok: false, message: "Sačekajte, učitava se autentifikacija." };
       if (!isAuthenticated) return { ok: false, message: "Niste prijavljeni." };
 
       setLoading(true);
       setError(null);
       try {
-        const res: ApiResponse<null> = await reportsApi.dodajReakciju(id, tip);
+        const res: ApiResponse<null> = await reportsApi.dodajReakciju(id, reakcija);
         if (!res.success) {
           setError(res.message ?? "Greška pri slanju reakcije.");
           return { ok: false, message: res.message };

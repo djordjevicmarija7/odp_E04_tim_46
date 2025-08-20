@@ -1,10 +1,11 @@
 import { IReportRepository } from "../../Domain/repositories/reports/IReportRepository";
 import { Report } from "../../Domain/models/Report";
 import { RowDataPacket, ResultSetHeader } from "mysql2";
-import {Reaction} from "../../Domain/models/Reaction"
+import { Reaction } from "../../Domain/models/Reaction"
 import db from "../connection/DbConnectionPool";
+import { Reakcije } from "../../Domain/types/Reakcije";
 
-export class ReportRepository implements IReportRepository{
+export class ReportRepository implements IReportRepository {
   async create(report: Report): Promise<Report> {
     try {
       const query = `
@@ -170,19 +171,46 @@ export class ReportRepository implements IReportRepository{
     }
   }
 
-  async addReaction(reaction: Reaction): Promise<Reaction> {
-    try {
-      const query = `INSERT INTO reactions (reportId, userId, tip) VALUES (?, ?, ?)`;
-      const [result] = await db.execute<ResultSetHeader>(query, [reaction.reportId, reaction.userId, reaction.reakcija]);
+  public async addReaction(reaction: Reaction): Promise<Reaction> {
+   try {
+    // format vremena za MySQL DATETIME (YYYY-MM-DD HH:mm:ss)
+    const now = new Date().toISOString().slice(0, 19).replace("T", " ");
+    const query = `
+      INSERT INTO reactions (reportId, userId, reakcija, createdAt)
+      VALUES (?, ?, ?, ?)
+      ON DUPLICATE KEY UPDATE reakcija = VALUES(reakcija), createdAt = VALUES(createdAt)
+    `;
 
-      if (result.insertId) {
-        return new Reaction(result.insertId, reaction.reportId, reaction.userId, reaction.reakcija, new Date().toISOString());
-      }
+    await db.execute<ResultSetHeader>(query, [
+      reaction.reportId,
+      reaction.userId,
+      reaction.reakcija,
+      now,
+    ]);
 
-      return new Reaction();
-    } catch (error) {
-      console.error("Error adding reaction:", error);
-      return new Reaction();
+    // dohvatimo red koji smo insertovali/azurirali
+    const [rows] = await db.execute<RowDataPacket[]>(
+      `SELECT id, reportId, userId, reakcija as reakcija, createdAt FROM reactions WHERE reportId = ? AND userId = ? LIMIT 1`,
+      [reaction.reportId, reaction.userId]
+    );
+
+    if (!rows || rows.length === 0) {
+      // Ako nije vraćen red, tretiramo to kao grešku
+      throw new Error("Neuspešno čuvanje reakcije.");
     }
+
+    const r = rows[0];
+    return {
+      id: r.id,
+      reportId: r.reportId,
+      userId: r.userId,
+      reakcija: r.reakcija as Reakcije,
+      createdAt: r.createdAt,
+    } as Reaction;
+  } catch (err) {
+    console.error("ReportRepository.addReaction error:", err);
+    // baci grešku dalje - kontroler/servis će to hvatati
+    throw err;
+  }
   }
 }

@@ -1,5 +1,5 @@
 import { ReportStatus } from "../../types/ReportStatus"
-
+import { Reaction } from "../../models/Reaction"
 export class ReportDto {
     public constructor(
         public id: Number = 0,
@@ -11,5 +11,6 @@ export class ReportDto {
         public status: ReportStatus = 'Kreiran',
         public cena: number | null = null,      // cena koju unosi majstor
         public masterComment: string | null = null,
+        public userReaction?: Reaction | null
     ) { }
 }
