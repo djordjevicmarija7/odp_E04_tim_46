@@ -23,7 +23,6 @@ export class AuthController {
     try {
       const { korisnickoIme, lozinka } = req.body;
 
-      // Validacija input parametara
       const rezultat = validacijaPodatakaAuth(korisnickoIme, lozinka);
 
       if (!rezultat.uspesno) {
@@ -33,9 +32,8 @@ export class AuthController {
 
       const result = await this.authService.prijava(korisnickoIme, lozinka);
 
-      // Proveravamo da li je prijava uspešna
       if (result.id !== 0) {
-        // Kreiranje jwt tokena
+
         const token = jwt.sign(
           { 
             id: result.id, 
@@ -68,10 +66,9 @@ export class AuthController {
 
       const result = await this.authService.registracija(korisnickoIme, lozinka, uloga);
       console.log("DEBUG registracija result:", result);
-      
-      // Proveravamo da li je registracija uspešna
+
       if (result.id !== 0) {
-        // Kreiranje jwt tokena
+  
         const token = jwt.sign(
           { 
             id: result.id, 

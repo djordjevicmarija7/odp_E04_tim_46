@@ -22,27 +22,25 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// <<< SERVIRANJE STATIČKIH FAJLOVA (uploads) — OBAVEZNO pre registracije ruta
+
 const uploadsPath = path.resolve(process.cwd(), 'uploads');
 console.log('[app] Serving static files from:', uploadsPath);
 app.use('/api/v1/uploads', express.static(uploadsPath));
-// -----------------------------------------
 
-// Repositories
 const userRepository: IUserRepository = new UserRepository();
 const reportRepository: IReportRepository = new ReportRepository();
 
-// Services
+
 const authService: IAuthService = new AuthService(userRepository);
 const userService: IUserService = new UserService(userRepository);
 const reportService: IReportService = new ReportService(reportRepository);
 
-// WebAPI routes
+
 const authController = new AuthController(authService);
 const userController = new UserController(userService);
 const reportController = new ReportController(reportService);
 
-// Registering routes
+
 app.use('/api/v1', authController.getRouter());
 app.use('/api/v1', userController.getRouter());
 app.use('/api/v1', reportController.getRouter());

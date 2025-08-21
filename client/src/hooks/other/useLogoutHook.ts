@@ -2,12 +2,12 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/useAuthHook";
 
 export function useLogout() {
-  const { logout } = useAuth(); // koristi logout iz konteksta
+  const { logout } = useAuth(); 
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    logout(); // resetuje user i token
-    navigate("/login"); // preusmeri na login stranicu
+    logout(); 
+    navigate("/login"); 
   };
 
   return handleLogout;

@@ -23,7 +23,6 @@ export function useSviIzvestaji(initialParams?: QueryParams) {
         return;
       }
 
-      // dodatna zaštita: samo majstor/rola može pozvati ovu rutu
       if (!user || user.uloga !== "majstor") {
         setReports([]);
         setLoading(false);

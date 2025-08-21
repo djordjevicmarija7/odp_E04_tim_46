@@ -4,33 +4,32 @@ import { reportsApi } from "./api_services/reports/ReportAPIService";
 
 import { ProtectedRoute } from "./components/protected_route/ProtectedRoute";
 
-// Auth stranice
+
 import PrijavaStranica from "./pages/auth/PrijavaStranica";
 import RegistracijaStranica from "./pages/auth/RegistracijaStranica";
 
-// Dashboards
+
 import StanarDashboard from "./pages/stanar/StanarDashboard";
 import MajstorDashboard from "./pages/majstor/MajstorDashboard";
 
-// Reports stranice
+
 import MojePrijavePage from "./pages/stanar/MojePrijavePage";
 import SvePrijavePage from "./pages/majstor/SvePrijavePage";
-import ZavrsiPrijavuPage from "./pages/majstor/ZavrsiPPrijavuPage"; // importuj stranicu koja završava prijavu
+import ZavrsiPrijavuPage from "./pages/majstor/ZavrsiPPrijavuPage"; 
 import ReportDetaljiPage from "./pages/stanar/DetaljiPrijavePage";
 import PrijaviKvarPage from "./pages/stanar/PrijaviKvarPage";
 
-// Ostalo
 import NotFoundStranica from "./pages/not_found/NotFoundPage";
 
 function App() {
   return (
     <Routes>
-      {/* Početne rute uvek vode na login */}
+      {}
       <Route path="/" element={<Navigate to="/login" replace />} />
       <Route path="/login" element={<PrijavaStranica authApi={authApi} />} />
       <Route path="/register" element={<RegistracijaStranica authApi={authApi} />} />
 
-      {/* Stanar dashboard (ostaje kao ranije) */}
+      {}
       <Route
         path="/stanar-dashboard"
         element={
@@ -40,7 +39,7 @@ function App() {
         }
       />
 
-      {/* Majstor dashboard sa nested (child) rutama */}
+      {}
       <Route
         path="/majstor-dashboard"
         element={
@@ -49,10 +48,10 @@ function App() {
           </ProtectedRoute>
         }
       >
-        {/* Default (index) možemo preusmeriti na sve-prijave */}
+       
         <Route index element={<Navigate to="sve-prijave" replace />} />
 
-        {/* Child rute (RELATIVE: bez prefiksa /majstor-dashboard) */}
+       
         <Route
           path="sve-prijave"
           element={<SvePrijavePage/>}
@@ -63,7 +62,7 @@ function App() {
         />
       </Route>
 
-      {/* Reports za stanara (ostaju globalno dostupne kroz odgovarajuće ProtectedRoute) */}
+     
       <Route
         path="/moje-prijave"
         element={
@@ -73,7 +72,7 @@ function App() {
         }
       />
 
-      {/* Ostaviti /prijava/:id ako ti treba globalno; inače koristi nested varijantu */}
+     
       <Route
         path="/prijava/:id"
         element={
@@ -92,7 +91,7 @@ function App() {
         }
       />
 
-      {/* Ostale rute */}
+  
       <Route path="/404" element={<NotFoundStranica />} />
       <Route path="*" element={<Navigate to="/404" replace />} />
     </Routes>

@@ -22,17 +22,15 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     logout();
   };
 
-  // Prikaži loading dok se učitava auth stanje
+
   if (isLoading) {
     return <h1>Loading...</h1>;
   }
 
-  // Ako korisnik nije autentifikovan, preusmeri na login
   if (!isAuthenticated) {
     return <Navigate to={redirectTo} state={{ from: location }} replace />;
   }
 
-  // Ako je potrebna specifična uloga, proveri je
   if (requiredRole && user?.uloga !== requiredRole) {
     return (
     <main className="min-h-screen bg-gradient-to-tr from-slate-600/75 to-red-800/70 flex items-center justify-center">

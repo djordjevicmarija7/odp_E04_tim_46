@@ -15,7 +15,6 @@ export function ReportCard({ report }: Props) {
       const res = await reportsApi.dodajReakciju(report.id, reaction);
       if (res.success) {
         alert(`✅ Reakcija uspešno poslata: ${reaction}`);
-        // ovde možeš setovati state da se UI osveži
       } else {
         alert(`⚠️ Greška: ${res.message}`);
       }

@@ -10,13 +10,12 @@ import { ReportRepository } from "../../Database/repositories/ReportRepository";
 import { validacijaPrijaveKvara } from "../validators/ReportValidator";
 import { IReportService } from "../../Domain/services/reports/IReportService";
 import {validacijaZavrsiPrijave} from "../validators/FinishReportValidator"
-// --- Folder za slike (jednostavna verzija) ---
 const REPORTS_DIR = "uploads/reports";
 if (!fs.existsSync(REPORTS_DIR)) {
   fs.mkdirSync(REPORTS_DIR, { recursive: true });
 }
 
-// --- multer storage koji koristi isti folder ---
+
 const uploadsAbsPath = path.resolve(process.cwd(), REPORTS_DIR);
 
 const storage = multer.diskStorage({
@@ -33,14 +32,14 @@ const storage = multer.diskStorage({
 
 const upload = multer({
   storage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB
+  limits: { fileSize: 5 * 1024 * 1024 }, 
   fileFilter: (_req, file, cb) => {
     if (/^image\/(png|jpe?g|gif|webp)$/.test(file.mimetype)) cb(null, true);
     else cb(new Error("Samo slike su dozvoljene (png, jpg, gif, webp)."));
   }
 });
 
-// --- Repo & service (ostavljam kako si imao) ---
+
 const repo = new ReportRepository();
 const service = new ReportService(repo);
 
@@ -55,11 +54,10 @@ export class ReportController {
   }
 
   private initializeRoutes(): void {
-    // POST sa multer middleware-om (upload polje naziva 'image')
+  
     this.router.post("/reports", authenticate, upload.single("image"), this.kreirajPrijavu.bind(this));
     this.router.get("/reports", authenticate, this.prijaveKorisnika.bind(this));
 
-    // specifičnije pre parametara
     this.router.get("/reports/all", authenticate, authorize("majstor"), this.svePrijave.bind(this));
     this.router.get("/reports/:id", authenticate, this.detaljiPrijave.bind(this));
 
@@ -72,7 +70,6 @@ export class ReportController {
   private async kreirajPrijavu(req: Request, res: Response): Promise<void> {
     try {
       const user = (req as any).user;
-      // Ako je poslat multipart/form-data, tekstualna polja su u req.body, fajl u req.file
       const { naslov, opis, adresa, slikaBase64 } = req.body;
 
       const valid = validacijaPrijaveKvara(naslov, opis, adresa);
@@ -83,7 +80,6 @@ export class ReportController {
 
       let imagePath: string | null = null;
 
-      // 1) Preferiraj multipart upload (req.file) ako postoji
       if ((req as any).file) {
         try {
           const savedFilename = (req as any).file.filename as string;
@@ -94,7 +90,6 @@ export class ReportController {
           return;
         }
       } else if (slikaBase64 && typeof slikaBase64 === "string") {
-        // 2) Backward-compatible: ako frontend šalje base64 (stari način), i dalje podržavamo
         try {
           const base64Data = slikaBase64.includes(",") ? slikaBase64.split(",")[1] : slikaBase64;
           const ext = slikaBase64.includes("png") ? ".png" : ".jpg";
@@ -110,7 +105,6 @@ export class ReportController {
         }
       }
 
-      // Poziv servisa — koristi tvoj service kao ranije
       const created = await service.kreirajPrijavu({
         userId: user.id,
         naslov,

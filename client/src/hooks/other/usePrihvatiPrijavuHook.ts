@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import { reportsApi } from "../../api_services/reports/ReportAPIService";
-import { useAuth } from "../../hooks/auth/useAuthHook"; // prilagodi putanju ako je drugačije
+import { useAuth } from "../../hooks/auth/useAuthHook"; 
 import type { ApiResponse } from "../../types/API/ApiResponse";
 export function usePrihvatiPrijavu() {
   const { isAuthenticated, isLoading: authLoading, user } = useAuth();

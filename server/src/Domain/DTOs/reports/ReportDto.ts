@@ -9,7 +9,7 @@ export class ReportDto {
         public adresa: string = '',
         public createdAt: string = new Date().toISOString(),
         public status: ReportStatus = 'Kreiran',
-        public cena: number | null = null,      // cena koju unosi majstor
+        public cena: number | null = null,  
         public masterComment: string | null = null,
         public userReaction?: Reaction | null
     ) { }

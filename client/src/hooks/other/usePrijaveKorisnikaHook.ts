@@ -15,7 +15,6 @@ export function usePrijaveKorisnika(initialParams?: QueryParams) {
 
   const load = useCallback(
     async (p?: QueryParams) => {
-      // Sačekaj da auth završi učitavanje
       if (authLoading) return;
       if (!isAuthenticated) {
         setReports([]);
@@ -49,7 +48,7 @@ export function usePrijaveKorisnika(initialParams?: QueryParams) {
       setLoading(true);
       return;
     }
-    // učitaj samo ako je korisnik autentifikovan
+  
     if (isAuthenticated) load(params);
     else {
       setReports([]);

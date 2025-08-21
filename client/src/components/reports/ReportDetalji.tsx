@@ -171,9 +171,7 @@ if (!valid.uspesno) {
 
           <ReactionButtons
             onReact={(r) => {
-              // pozovi API za reakciju i osveži report nakon (ili handle in ReportCard)
               reportsApi.dodajReakciju(reportId, r).then(() => {
-                // osveži da bi prikazao eventualno userReaction
                 fetchReport();
               }).catch((e) => {
                 console.error("Reaction error:", e);

@@ -173,7 +173,7 @@ export class ReportRepository implements IReportRepository {
 
   public async addReaction(reaction: Reaction): Promise<Reaction> {
    try {
-    // format vremena za MySQL DATETIME (YYYY-MM-DD HH:mm:ss)
+   
     const now = new Date().toISOString().slice(0, 19).replace("T", " ");
     const query = `
       INSERT INTO reactions (reportId, userId, reakcija, createdAt)
@@ -188,14 +188,13 @@ export class ReportRepository implements IReportRepository {
       now,
     ]);
 
-    // dohvatimo red koji smo insertovali/azurirali
+
     const [rows] = await db.execute<RowDataPacket[]>(
       `SELECT id, reportId, userId, reakcija as reakcija, createdAt FROM reactions WHERE reportId = ? AND userId = ? LIMIT 1`,
       [reaction.reportId, reaction.userId]
     );
 
     if (!rows || rows.length === 0) {
-      // Ako nije vraćen red, tretiramo to kao grešku
       throw new Error("Neuspešno čuvanje reakcije.");
     }
 
@@ -209,7 +208,6 @@ export class ReportRepository implements IReportRepository {
     } as Reaction;
   } catch (err) {
     console.error("ReportRepository.addReaction error:", err);
-    // baci grešku dalje - kontroler/servis će to hvatati
     throw err;
   }
   }

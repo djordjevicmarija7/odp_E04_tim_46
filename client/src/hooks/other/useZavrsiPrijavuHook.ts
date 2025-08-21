@@ -2,7 +2,7 @@ import { useState, useCallback } from "react";
 import type { ApiResponse } from "../../types/API/ApiResponse";
 import type { FinishReportPayload } from "../../types/reports/FinishReportPayload";
 import { reportsApi } from "../../api_services/reports/ReportAPIService";
-import { useAuth } from "../../hooks/auth/useAuthHook"; // prilagodi putanju ako je drugačije
+import { useAuth } from "../../hooks/auth/useAuthHook";
 
 export function useZavrsiPrijavu() {
   const { isAuthenticated, isLoading: authLoading, user } = useAuth();

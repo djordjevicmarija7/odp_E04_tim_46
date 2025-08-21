@@ -23,7 +23,7 @@ export class ReactionRepository {
     }
   }
 
-  // Upsert (insert ili update) - koristi UNIQUE (reportId,userId)
+
   async upsert(reportId: number, userId: number, reakcija: Reakcije): Promise<Reaction | null> {
     try {
       const now = new Date().toISOString().slice(0, 19).replace("T", " ");
@@ -40,7 +40,6 @@ export class ReactionRepository {
     }
   }
 
-  // Bulk dohvatanje svih reakcija za grupu reportId-a za jednog usera
   async getByReportIdsAndUser(reportIds: number[], userId: number): Promise<Reaction[]> {
     if (!reportIds || reportIds.length === 0) return [];
     try {

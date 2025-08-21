@@ -19,7 +19,6 @@ export function MasterReportCard({ report, reportsApi, onRefresh }: Props) {
     try {
       const res = await reportsApi.prihvatiPrijavu(report.id);
       if (res.success) {
-        // preusmeri majstora na stranicu za završavanje prijave
         navigate(`/majstor-dashboard/zavrsi-prijavu/${report.id}`);
         if (onRefresh) onRefresh();
       } else {

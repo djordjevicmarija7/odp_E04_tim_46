@@ -78,7 +78,7 @@ export class ReportService implements IReportService {
     return await this.reactionRepo.getByReportAndUser(reportId, userId);
   }
 
-  // Bulk varijanta: za listu reportId vrati sve reakcije ovog usera
+ 
   async getReactionsForUserForReports(reportIds: number[], userId: number): Promise<Reaction[]> {
     return await this.reactionRepo.getByReportIdsAndUser(reportIds, userId);
   }
@@ -89,20 +89,14 @@ export class ReportService implements IReportService {
     throw new Error("Prijava nije pronađena.");
   }
 
-  // primer provere (opciono): dozvoli reakciju samo ako je status Saniran
-  // if (report.status !== "Saniran") throw new Error("Možete reagovati samo na sanirane prijave.");
-
-  // Sastavi objekat reakcije
   const reaction: Reaction = {
-    id: 0, // ili ostavi undefined/0 jer će DB generisati id
+    id: 0, 
     reportId,
     userId,
     reakcija: reakcija,
     createdAt: new Date().toISOString()
   };
 
-  // OVDE je tvoja linija koju si pomenuo:
-  // pretpostavka: ReportRepository ima metodu addReaction koja radi upsert/insert
   return await this.repo.addReaction(reaction);
   }
 }

@@ -5,7 +5,6 @@ export function validacijaPrijaveKvara(
   opis?: string,
   adresa?: string
 ): RezultatValidacije {
-  // osnovna provera obaveznih polja
   if (!opis || !adresa) {
     return { uspesno: false, poruka: 'Opis i adresa su obavezni.' };
   }
@@ -14,7 +13,6 @@ export function validacijaPrijaveKvara(
   const opisTrim = opis ? opis.trim() : '';
   const adresaTrim = adresa ? adresa.trim() : '';
 
-  // dužina
   if (opisTrim.length < 5) {
     return { uspesno: false, poruka: 'Opis mora imati najmanje 5 karaktera.' };
   }
@@ -35,6 +33,5 @@ export function validacijaPrijaveKvara(
     return { uspesno: false, poruka: 'Adresa može imati najviše 200 karaktera.' };
   }
 
-  // sve ok
   return { uspesno: true };
 }

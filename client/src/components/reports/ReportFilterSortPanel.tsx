@@ -1,4 +1,3 @@
-// src/components/reports/ReportFilterSortPanel.tsx
 import { useEffect, useState } from "react";
 import type { ReportDto } from "../../models/reports/ReportDto";
 import { ReportList } from "./ReportList";
@@ -43,12 +42,12 @@ export function ReportFilterSortPanel({ fetchFn }: Props) {
 
   return (
     <div className="space-y-6">
-      {/* Search bar */}
+      {}
       <FilterBar onSearch={(q) => setSearch(q)} />
 
-      {/* Filter + Sort controls */}
+      {}
       <div className="flex flex-col md:flex-row gap-4 items-center justify-between bg-white shadow rounded-lg p-4">
-        {/* Filter status */}
+        {}
         <div className="flex items-center gap-2">
           <label className="font-medium text-gray-700">Status:</label>
           <select
@@ -64,7 +63,7 @@ export function ReportFilterSortPanel({ fetchFn }: Props) {
           </select>
         </div>
 
-        {/* Sortiranje */}
+        {}
         <div className="flex items-center gap-2">
           <label className="font-medium text-gray-700">Sortiraj po:</label>
           <select
@@ -87,7 +86,7 @@ export function ReportFilterSortPanel({ fetchFn }: Props) {
         </div>
       </div>
 
-      {/* Prikaz prijava */}
+      {}
       {loading ? (
         <p className="text-center text-gray-500 italic">Učitavanje...</p>
       ) : (

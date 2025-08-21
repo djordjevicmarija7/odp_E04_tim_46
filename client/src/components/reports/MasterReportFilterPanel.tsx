@@ -33,7 +33,6 @@ export function MasterReportFilterPanel({ fetchFn, reportsApi }: Props) {
 
   useEffect(() => {
     fetchReports();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
   return (

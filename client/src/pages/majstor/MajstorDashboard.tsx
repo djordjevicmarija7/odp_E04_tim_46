@@ -6,7 +6,7 @@ export default function MajstorDashboard() {
 
   return (
     <main className="page-wrapper text-center">
-      {/* Header sa logout dugmetom */}
+      {}
       <header className="flex justify-end mb-4">
         <button
           onClick={logout}
@@ -16,10 +16,10 @@ export default function MajstorDashboard() {
         </button>
       </header>
 
-      {/* Naslov */}
+      {}
       <h1 className="text-3xl font-bold text-gray-900 mb-6">👷 Dobrodošli, majstore!</h1>
 
-      {/* OVDE se prikazuju child route komponentе */}
+      {}
       <div className="mt-6">
         <Outlet />
       </div>
