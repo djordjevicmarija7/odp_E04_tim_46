@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import type { IReportsAPIService } from "../../api_services/reports/IReportAPIService";
 
 interface Props {
@@ -6,6 +7,8 @@ interface Props {
 }
 
 export function PrijaviKvarForma({ reportsApi }: Props) {
+  const navigate = useNavigate();
+
   const [naslov, setNaslov] = useState("");
   const [opis, setOpis] = useState("");
   const [adresa, setAdresa] = useState("");
@@ -30,13 +33,18 @@ export function PrijaviKvarForma({ reportsApi }: Props) {
       form.append("naslov", naslov);
       form.append("opis", opis);
       form.append("adresa", adresa);
-      if (file) form.append("image", file); 
+      if (file) form.append("image", file);
 
       const resp = await reportsApi.kreirajPrijavu(form);
       if (!resp.success) {
         setGreska(resp.message ?? "Greška pri kreiranju prijave");
       } else {
-        setNaslov(""); setOpis(""); setAdresa(""); setFile(null); setPreview(null); setGreska("");
+        setNaslov("");
+        setOpis("");
+        setAdresa("");
+        setFile(null);
+        setPreview(null);
+        setGreska("");
       }
     } catch (err: any) {
       setGreska(err?.message ?? "Server error");
@@ -46,41 +54,70 @@ export function PrijaviKvarForma({ reportsApi }: Props) {
   };
 
   return (
-    <form onSubmit={podnesiFormu} className="grid gap-4">
-      <input
-        value={naslov}
-        onChange={(e) => setNaslov(e.target.value)}
-        placeholder="Naslov prijave"
-        className="input-field"
-      />
-      <textarea
-        value={opis}
-        onChange={(e) => setOpis(e.target.value)}
-        placeholder="Detaljan opis kvara..."
-        className="textarea-field h-28"
-      />
-      <input
-        value={adresa}
-        onChange={(e) => setAdresa(e.target.value)}
-        placeholder="Adresa"
-        className="input-field"
-      />
+    <div>
+      <div className="mb-4 flex items-center justify-between">
+        <h2 className="text-lg font-semibold">Nova prijava kvara</h2>
 
-      <div>
-        <label className="text-sm font-medium text-gray-700">Dodaj sliku (opciono)</label>
-        <input type="file" accept="image/*" onChange={onFileChange} className="mt-2" />
-        {preview && (
-          <div className="mt-3">
-            <img src={preview} alt="preview" className="w-48 h-32 object-cover rounded-md border" />
-          </div>
-        )}
+        <button
+          type="button"
+          onClick={() => navigate(-1)}
+          aria-label="Nazad"
+          className="inline-flex items-center gap-2 bg-white/60 hover:bg-white/80 text-gray-800 px-3 py-1.5 rounded-xl border border-gray-200 shadow-sm transition"
+        >
+          ← Назад
+        </button>
       </div>
 
-      {greska && <p className="text-red-600 font-medium">{greska}</p>}
+      <form onSubmit={podnesiFormu} className="grid gap-4">
+        <input
+          value={naslov}
+          onChange={(e) => setNaslov(e.target.value)}
+          placeholder="Naslov prijave"
+          className="input-field"
+        />
+        <textarea
+          value={opis}
+          onChange={(e) => setOpis(e.target.value)}
+          placeholder="Detaljan opis kvara..."
+          className="textarea-field h-28"
+        />
+        <input
+          value={adresa}
+          onChange={(e) => setAdresa(e.target.value)}
+          placeholder="Adresa"
+          className="input-field"
+        />
 
-      <button type="submit" className="btn-primary w-fit" disabled={loading}>
-        {loading ? "Slanje..." : "📤 Pošalji"}
-      </button>
-    </form>
+        <div>
+          <label className="text-sm font-medium text-gray-700">Dodaj sliku (opciono)</label>
+          <input type="file" accept="image/*" onChange={onFileChange} className="mt-2" />
+          {preview && (
+            <div className="mt-3">
+              <img
+                src={preview}
+                alt="preview"
+                className="w-48 h-32 object-cover rounded-md border"
+              />
+            </div>
+          )}
+        </div>
+
+        {greska && <p className="text-red-600 font-medium">{greska}</p>}
+
+        <div className="flex items-center gap-3">
+          <button type="submit" className="btn-primary w-fit" disabled={loading}>
+            {loading ? "Slanje..." : "📤 Pošalji"}
+          </button>
+
+          <button
+            type="button"
+            onClick={() => navigate(-1)}
+            className="inline-flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-800 px-3 py-1.5 rounded-xl border border-gray-200 transition"
+          >
+            Откажи
+          </button>
+        </div>
+      </form>
+    </div>
   );
 }

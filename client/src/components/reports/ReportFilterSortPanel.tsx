@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import type { ReportDto } from "../../models/reports/ReportDto";
 import { ReportList } from "./ReportList";
 import { FilterBar } from "./FilterBar";
@@ -12,6 +13,8 @@ interface Props {
 }
 
 export function ReportFilterSortPanel({ fetchFn }: Props) {
+  const navigate = useNavigate();
+
   const [reports, setReports] = useState<ReportDto[]>([]);
   const [status, setStatus] = useState("");
   const [sortBy, setSortBy] = useState<"createdAt" | "cena">("createdAt");
@@ -42,12 +45,26 @@ export function ReportFilterSortPanel({ fetchFn }: Props) {
 
   return (
     <div className="space-y-6">
-      {}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <h2 className="text-lg font-semibold">📋 Moje prijave</h2>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => navigate(-1)}
+            aria-label="Nazad"
+            className="inline-flex items-center gap-2 bg-white/60 hover:bg-white/80 text-gray-800 px-3 py-1.5 rounded-xl border border-gray-200 shadow-sm transition"
+          >
+            ← Nazad
+          </button>
+        </div>
+      </div>
+
       <FilterBar onSearch={(q) => setSearch(q)} />
 
-      {}
       <div className="flex flex-col md:flex-row gap-4 items-center justify-between bg-white shadow rounded-lg p-4">
-        {}
         <div className="flex items-center gap-2">
           <label className="font-medium text-gray-700">Status:</label>
           <select
@@ -63,7 +80,6 @@ export function ReportFilterSortPanel({ fetchFn }: Props) {
           </select>
         </div>
 
-        {}
         <div className="flex items-center gap-2">
           <label className="font-medium text-gray-700">Sortiraj po:</label>
           <select
@@ -86,7 +102,6 @@ export function ReportFilterSortPanel({ fetchFn }: Props) {
         </div>
       </div>
 
-      {}
       {loading ? (
         <p className="text-center text-gray-500 italic">Učitavanje...</p>
       ) : (

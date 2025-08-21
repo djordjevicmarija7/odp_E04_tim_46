@@ -1,4 +1,3 @@
-// src/components/reports/ReportDetalji.tsx
 import { useEffect, useState } from "react";
 import type { IReportsAPIService } from "../../api_services/reports/IReportAPIService";
 import type { ReportDto } from "../../models/reports/ReportDto";
@@ -8,7 +7,7 @@ import {validacijaZavrsiPrijavu} from "../../api_services/validators/reports/Fin
 interface Props {
   reportsApi: IReportsAPIService;
   reportId: number;
-  /** optional callback koji parent može proslediti da osveži listu nakon izmene */
+  
   onUpdated?: (updated?: ReportDto) => void;
 }
 
@@ -19,9 +18,9 @@ export function ReportDetalji({ reportsApi, reportId, onUpdated }: Props) {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
-  // forma za majstora
+
   const [comment, setComment] = useState<string>("");
-  const [cena, setCena] = useState<string>(""); // držimo kao string radi inputa
+  const [cena, setCena] = useState<string>(""); 
 
   const API_URL = import.meta.env.VITE_API_URL;
 
@@ -32,7 +31,6 @@ export function ReportDetalji({ reportsApi, reportId, onUpdated }: Props) {
       const res = await reportsApi.getPrijavaById(reportId);
       if (res.success && res.data) {
         setReport(res.data);
-        // pre-populiraj formu komentarom i cenom ako već postoje (korisno za edit)
         setComment(res.data.masterComment ?? "");
         setCena(res.data.cena !== undefined && res.data.cena !== null ? String(res.data.cena) : "");
       } else {
@@ -48,7 +46,6 @@ export function ReportDetalji({ reportsApi, reportId, onUpdated }: Props) {
 
   useEffect(() => {
     fetchReport();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reportId]);
 
   if (loading || !report) return <p className="text-center text-gray-600">Učitavanje...</p>;
@@ -75,7 +72,6 @@ if (!valid.uspesno) {
       const res = await reportsApi.zavrsiPrijavu(reportId, body);
       if (res.success) {
         setSuccess(isSaniran ? "Prijava označena kao sanirana." : "Prijava označena kao nerešena.");
-        // osveži prijavu iz servera (da dobiješ novi status, masterComment, cenu)
         await fetchReport();
         if (onUpdated) onUpdated(report ?? undefined);
       } else {
@@ -113,7 +109,6 @@ if (!valid.uspesno) {
         )}
       </div>
 
-      {/* Ako je prijava u toku popravke - prikaži formu za majstora */}
       {report.status === "Popravka u toku" && (
         <div className="mt-4 p-4 border rounded bg-gray-50">
           <h3 className="font-semibold mb-2">Završi prijavu</h3>
@@ -161,7 +156,6 @@ if (!valid.uspesno) {
         </div>
       )}
 
-      {/* Ako je saniran ili nerešeno - prikaži komentar majstora i reakcije */}
       {(report.status === "Saniran" || report.status === "Problem nije rešen") && (
         <div className="mt-2 p-3 bg-gray-50 rounded border">
           <p className="text-sm text-gray-700"><strong>Komentar majstora:</strong></p>

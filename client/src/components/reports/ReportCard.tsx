@@ -45,7 +45,7 @@ export function ReportCard({ report }: Props) {
         <div className="flex justify-between items-center mt-2 text-sm text-gray-700">
           <span>Status: <span className="font-medium">{report.status}</span></span>
           {report.cena !== undefined && (
-            <span className="font-semibold text-blue-600">Cena: {report.cena} дин</span>
+            <span className="font-semibold text-blue-600">Cena: {report.cena} din</span>
           )}
         </div>
 

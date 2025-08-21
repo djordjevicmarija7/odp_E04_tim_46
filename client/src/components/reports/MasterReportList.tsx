@@ -10,7 +10,7 @@ interface Props {
 
 export function MasterReportList({ reports, reportsApi, onRefresh }: Props) {
   if (!reports || reports.length === 0) {
-    return <p className="text-center text-gray-500 italic">Нема пријава</p>;
+    return <p className="text-center text-gray-500 italic">Nema prijava</p>;
   }
 
   return (

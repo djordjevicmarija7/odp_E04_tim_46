@@ -7,7 +7,7 @@ interface Props {
 
 export function ReportList({ reports }: Props) {
   if (!reports || reports.length === 0) {
-    return <p className="text-center text-gray-500 italic">Нема пријава</p>;
+    return <p className="text-center text-gray-500 italic">Nema prijava</p>;
   }
 
   return (
