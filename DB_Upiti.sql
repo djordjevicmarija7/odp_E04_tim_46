@@ -50,18 +50,18 @@ INSERT INTO users (korisnickoIme, lozinka, uloga) VALUES
 
 -- Stanar Pera (imagePath polja su NULL ili primer putanje)
 INSERT INTO reports (userId, naslov, opis, imagePath, adresa, status) VALUES
-(1, 'Pokvaren bojler', 'Bojler ne greje vodu već 3 dana.', NULL, 'Bulevar 12', 'Kreiran'),
+(1, 'Pokvaren bojler', 'Bojler ne greje vodu već 3 dana.', '/uploads/reports/pokvaren-bojler.jpg', 'Bulevar 12', 'Kreiran'),
 (1, 'Prozor ne dihtuje', 'Zimi duva hladan vazduh, treba zamena gume.', '/uploads/reports/prozor-dihtovanje.jpg', 'Bulevar 12', 'Popravka u toku');
 
 -- Stanarka Ana
 INSERT INTO reports (userId, naslov, opis, imagePath, adresa, status) VALUES
 (3, 'Slavina curi', 'Slavina u kuhinji kaplje stalno.', '/uploads/reports/slavina-curi.jpg', 'Kneza Miloša 45', 'Saniran'),
-(3, 'Pokvaren interfon', 'Ne radi zvono na interfonu, niko ne može da pozvoni.', NULL, 'Kneza Miloša 45', 'Kreiran'),
+(3, 'Pokvaren interfon', 'Ne radi zvono na interfonu, niko ne može da pozvoni.', '/uploads/reports/interfon.jpg', 'Kneza Miloša 45', 'Kreiran'),
 (3, 'Lomljiva vrata od lifta', 'Vrata lifta se teško zatvaraju, može da bude opasno.', '/uploads/reports/vrata-lifta.jpg', 'Kneza Miloša 45', 'Popravka u toku');
 
 -- Stanarka Ivana
 INSERT INTO reports (userId, naslov, opis, imagePath, adresa, status) VALUES
-(5, 'Kvar na električnoj instalaciji', 'Nestaje struja u dnevnoj sobi kad se uključi klima.', NULL, 'Nemanjina 7', 'Kreiran'),
+(5, 'Kvar na električnoj instalaciji', 'Nestaje struja u dnevnoj sobi kad se uključi klima.', '/uploads/reports/elektricna-instalacija.jpg', 'Nemanjina 7', 'Kreiran'),
 (5, 'Curenje krova', 'Krov prokišnjava na više mesta tokom kiše.', '/uploads/reports/curenje-krova.jpg', 'Nemanjina 7', 'Kreiran');
 
 -- Majstor Mika popravio prozor (report 2) - ažuriran, već ima imagePath od insert-a iznad
