@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import type { IReportsAPIService } from "../../api_services/reports/IReportAPIService";
+import { validacijaPrijaveKvaraClient } from "../../api_services/validators/reports/reportValidator";
 
 interface Props {
   reportsApi: IReportsAPIService;
@@ -27,6 +28,13 @@ export function PrijaviKvarForma({ reportsApi }: Props) {
   const podnesiFormu = async (e: React.FormEvent) => {
     e.preventDefault();
     setGreska("");
+
+    const valid = validacijaPrijaveKvaraClient(naslov, opis, adresa);
+    if (!valid.uspesno) {
+      setGreska(valid.poruka ?? "Neispravni podaci");
+      return;
+    }
+
     setLoading(true);
     try {
       const form = new FormData();
@@ -43,7 +51,10 @@ export function PrijaviKvarForma({ reportsApi }: Props) {
         setOpis("");
         setAdresa("");
         setFile(null);
-        setPreview(null);
+        if (preview) {
+          URL.revokeObjectURL(preview);
+          setPreview(null);
+        }
         setGreska("");
       }
     } catch (err: any) {
@@ -121,3 +132,5 @@ export function PrijaviKvarForma({ reportsApi }: Props) {
     </div>
   );
 }
+
+export default PrijaviKvarForma;

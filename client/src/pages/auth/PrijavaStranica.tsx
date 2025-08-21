@@ -18,7 +18,7 @@ export default function PrijavaStranica({ authApi }: LoginPageProps) {
   }, [isAuthenticated, navigate, user]);
 
   return (
-    <main className="min-h-screen bg-gradient-to-tr from-slate-600/75 to-orange-800/70 flex items-center justify-center">
+<main className="min-h-screen bg-gradient-to-br from-indigo-50 via-sky-50 to-white flex items-center justify-center">
       <PrijavaForma authApi={authApi} />
     </main>
   );
