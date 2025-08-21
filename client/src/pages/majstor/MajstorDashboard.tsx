@@ -17,7 +17,7 @@ export default function MajstorDashboard() {
       </header>
 
       {/* Naslov */}
-      <h1 className="text-3xl font-bold text-gray-900 mb-6">👷 Добродошли, мајсторе!</h1>
+      <h1 className="text-3xl font-bold text-gray-900 mb-6">👷 Dobrodošli, majstore!</h1>
 
       {/* OVDE se prikazuju child route komponentе */}
       <div className="mt-6">

@@ -3,7 +3,7 @@ import type { IAuthAPIService } from "./IAuthAPIService";
 import type { UserRole } from "../../types/users/UserRole";
 import axios from "axios";
 
-const BASE = (import.meta.env.VITE_API_URL ?? "").replace(/\/+$/g, ""); // uklanja trailing slash
+const BASE = (import.meta.env.VITE_API_URL ?? "").replace(/\/+$/g, ""); 
 const API_URL: string = `${BASE}/auth`;
 
 export const authApi: IAuthAPIService = {

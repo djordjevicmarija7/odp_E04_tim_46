@@ -20,8 +20,8 @@ export default function AuthStranica({ authApi, onLoginSuccess }: AuthFormProps)
           className="toggle-button"
         >
           {jeRegistracija
-            ? "Имате налог? Пријавите се"
-            : "Немате налог? Региструјте се"}
+            ? "Imate nalog? Prijavite se"
+            : "Nemate nalog? Registrujte se"}
         </button>
       </div>
     </div>

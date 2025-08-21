@@ -30,7 +30,7 @@ export function PrijaviKvarForma({ reportsApi }: Props) {
       form.append("naslov", naslov);
       form.append("opis", opis);
       form.append("adresa", adresa);
-      if (file) form.append("image", file); // polje "image" — multer u controlleru očekuje isto
+      if (file) form.append("image", file); 
 
       const resp = await reportsApi.kreirajPrijavu(form);
       if (!resp.success) {
@@ -50,24 +50,24 @@ export function PrijaviKvarForma({ reportsApi }: Props) {
       <input
         value={naslov}
         onChange={(e) => setNaslov(e.target.value)}
-        placeholder="Наслов пријаве"
+        placeholder="Naslov prijave"
         className="input-field"
       />
       <textarea
         value={opis}
         onChange={(e) => setOpis(e.target.value)}
-        placeholder="Детаљан опис квара..."
+        placeholder="Detaljan opis kvara..."
         className="textarea-field h-28"
       />
       <input
         value={adresa}
         onChange={(e) => setAdresa(e.target.value)}
-        placeholder="Адреса"
+        placeholder="Adresa"
         className="input-field"
       />
 
       <div>
-        <label className="text-sm font-medium text-gray-700">Додај слику (опционо)</label>
+        <label className="text-sm font-medium text-gray-700">Dodaj sliku (opciono)</label>
         <input type="file" accept="image/*" onChange={onFileChange} className="mt-2" />
         {preview && (
           <div className="mt-3">
@@ -79,7 +79,7 @@ export function PrijaviKvarForma({ reportsApi }: Props) {
       {greska && <p className="text-red-600 font-medium">{greska}</p>}
 
       <button type="submit" className="btn-primary w-fit" disabled={loading}>
-        {loading ? "Слање..." : "📤 Пошаљи"}
+        {loading ? "Slanje..." : "📤 Pošalji"}
       </button>
     </form>
   );

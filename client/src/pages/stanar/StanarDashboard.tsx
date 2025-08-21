@@ -16,14 +16,14 @@ export default function StanarDashboard() {
       </header>
 
       <h1 className="text-3xl font-bold text-gray-900 mb-6">
-        👋 Добродошли, станар!
+        👋 Dobrodošli, stanar!
       </h1>
       <div className="flex flex-col md:flex-row justify-center gap-4">
         <Link to="/moje-prijave" className="btn-primary w-full md:w-auto">
-          Моје пријаве
+          Moje prijave
         </Link>
         <Link to="/prijavi-kvar" className="btn-primary w-full md:w-auto">
-          Пријави нови квар
+          Prijavi novi kvar!
         </Link>
       </div>
     </main>

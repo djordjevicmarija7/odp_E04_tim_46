@@ -74,18 +74,18 @@ export function FinishReportForm({ reportsApi, reportId }: Props) {
     <form onSubmit={zavrsi} className="grid gap-4">
       {reportImage && (
         <div>
-          <label className="text-sm font-medium text-gray-700">Слика пријаве</label>
+          <label className="text-sm font-medium text-gray-700">Slika prijave</label>
           <img src={reportImage} alt="report" className="w-72 h-48 object-cover rounded-md border mb-3" />
         </div>
       )}
 
-      <label className="text-sm text-gray-700">Наслов пријаве</label>
+      <label className="text-sm text-gray-700">Naslov prijave</label>
 <p className="bg-gray-100 p-2 rounded">{naslov}</p>
 
-<label className="text-sm text-gray-700">Опис пријаве</label>
+<label className="text-sm text-gray-700">Opis prijave</label>
 <p className="bg-gray-100 p-2 rounded whitespace-pre-line">{opis}</p>
 
-      <label className="text-sm text-gray-700">Коментар мајстора</label>
+      <label className="text-sm text-gray-700">Komentar majstora</label>
       <textarea
         value={komentar}
         onChange={e => setKomentar(e.target.value)}
@@ -94,7 +94,7 @@ export function FinishReportForm({ reportsApi, reportId }: Props) {
         rows={5}
       />
 
-      <label className="text-sm text-gray-700">Цена (дин)</label>
+      <label className="text-sm text-gray-700">Cijena (din)</label>
       <input
         type="number"
         value={cena}
@@ -104,7 +104,7 @@ export function FinishReportForm({ reportsApi, reportId }: Props) {
         min={0}
       />
 
-      <label className="text-sm text-gray-700">Иcxод</label>
+      <label className="text-sm text-gray-700">Ishod</label>
       <select
         value={ishod ? "saniran" : "nerez"}
         onChange={e => setIshod(e.target.value === "saniran")}
