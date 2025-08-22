@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
+import { ReactionButtons } from "./ReactionButtons";
 import type { IReportsAPIService } from "../../api_services/reports/IReportAPIService";
 import type { ReportDto } from "../../models/reports/ReportDto";
-import { ReactionButtons } from "./ReactionButtons";
-import {validacijaZavrsiPrijavu} from "../../api_services/validators/reports/FinishReportVslidator"
+import { validacijaZavrsiPrijavu } from "../../api_services/validators/reports/FinishReportVslidator";
 
 interface Props {
   reportsApi: IReportsAPIService;
   reportId: number;
-  
   onUpdated?: (updated?: ReportDto) => void;
 }
 
@@ -18,9 +17,8 @@ export function ReportDetalji({ reportsApi, reportId, onUpdated }: Props) {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
-
   const [comment, setComment] = useState<string>("");
-  const [cena, setCena] = useState<string>(""); 
+  const [cena, setCena] = useState<string>("");
 
   const API_URL = import.meta.env.VITE_API_URL;
 
@@ -36,8 +34,7 @@ export function ReportDetalji({ reportsApi, reportId, onUpdated }: Props) {
       } else {
         setError(res.message || "Ne mogu da učitam prijavu.");
       }
-    } catch (err) {
-      console.error(err);
+    } catch {
       setError("Greška pri učitavanju prijave.");
     } finally {
       setLoading(false);
@@ -53,12 +50,12 @@ export function ReportDetalji({ reportsApi, reportId, onUpdated }: Props) {
   const imageUrl = report.imagePath ? `${API_URL}${report.imagePath}` : null;
 
   const handleFinish = async (isSaniran: boolean) => {
-   
-  const valid = validacijaZavrsiPrijavu(comment, cena);
-if (!valid.uspesno) {
-  setError(valid.poruka ?? "Neispravni podaci");
-  return;
-}
+    const valid = validacijaZavrsiPrijavu(comment, cena);
+    if (!valid.uspesno) {
+      setError(valid.poruka ?? "Neispravni podaci");
+      return;
+    }
+
     setFinishLoading(true);
     setError(null);
     setSuccess(null);
@@ -77,8 +74,7 @@ if (!valid.uspesno) {
       } else {
         setError(res.message || "Greška pri završavanju prijave.");
       }
-    } catch (err) {
-      console.error(err);
+    } catch {
       setError("Greška pri završavanju prijave.");
     } finally {
       setFinishLoading(false);
@@ -86,39 +82,39 @@ if (!valid.uspesno) {
   };
 
   return (
-    <div className="bg-white shadow-md rounded-lg p-6 space-y-4">
+    <div className="bg-white shadow-md rounded-2xl p-6 space-y-6">
       <h2 className="text-2xl font-bold text-gray-800">{report.naslov}</h2>
-      <p className="text-gray-700">{report.opis}</p>
+      <p className="text-gray-700 whitespace-pre-line">{report.opis}</p>
 
       {imageUrl ? (
         <img
           src={imageUrl}
           alt={report.naslov}
-          className="w-full max-h-96 object-contain rounded-md border"
+          className="w-full max-h-96 object-contain rounded-xl border"
         />
       ) : (
-        <div className="w-full h-64 flex items-center justify-center bg-gray-100 text-gray-500 rounded-md border">
+        <div className="w-full h-64 flex items-center justify-center bg-gray-100 text-gray-500 rounded-xl border">
           📷 Nema slike
         </div>
       )}
 
-      <div className="flex items-center gap-4">
-        <span className="text-sm text-gray-500">Status: <strong className="ml-1">{report.status}</strong></span>
+      <div className="flex items-center gap-4 text-sm text-gray-500">
+        <span>Status: <strong className="text-gray-700">{report.status}</strong></span>
         {report.cena !== undefined && report.cena !== null && (
-          <span className="text-sm text-gray-700">• Cena: <strong className="ml-1">{report.cena} RSD</strong></span>
+          <span>• Cena: <strong className="text-gray-700">{report.cena} RSD</strong></span>
         )}
       </div>
 
       {report.status === "Popravka u toku" && (
-        <div className="mt-4 p-4 border rounded bg-gray-50">
-          <h3 className="font-semibold mb-2">Završi prijavu</h3>
+        <div className="mt-4 p-4 border rounded-xl bg-gray-50 space-y-3">
+          <h3 className="font-semibold text-gray-800">Završi prijavu</h3>
 
           <label className="block text-sm text-gray-700">Komentar majstora</label>
           <textarea
             value={comment}
             onChange={(e) => setComment(e.target.value)}
             rows={4}
-            className="w-full border rounded p-2 mt-1"
+            className="w-full border rounded-xl p-2 mt-1 focus:ring-2 focus:ring-blue-400 outline-none"
             placeholder="Opiši radove koje si uradio (obavezno)"
           />
 
@@ -127,17 +123,17 @@ if (!valid.uspesno) {
             type="number"
             value={cena}
             onChange={(e) => setCena(e.target.value)}
-            className="w-40 border rounded p-2 mt-1"
+            className="w-40 border rounded-xl p-2 mt-1 focus:ring-2 focus:ring-blue-400 outline-none"
             min={0}
             step="0.01"
             placeholder="npr. 1200"
           />
 
-          <div className="mt-4 flex gap-3">
+          <div className="flex gap-3 mt-3">
             <button
               onClick={() => handleFinish(true)}
               disabled={finishLoading}
-              className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-60"
+              className="px-4 py-2 bg-green-600 text-white rounded-xl hover:bg-green-700 disabled:opacity-60 transition"
             >
               {finishLoading ? "Šaljem..." : "Označi kao Saniran"}
             </button>
@@ -145,7 +141,7 @@ if (!valid.uspesno) {
             <button
               onClick={() => handleFinish(false)}
               disabled={finishLoading}
-              className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 disabled:opacity-60"
+              className="px-4 py-2 bg-red-600 text-white rounded-xl hover:bg-red-700 disabled:opacity-60 transition"
             >
               {finishLoading ? "Šaljem..." : "Označi kao Problem nije rešen"}
             </button>
@@ -157,23 +153,34 @@ if (!valid.uspesno) {
       )}
 
       {(report.status === "Saniran" || report.status === "Problem nije rešen") && (
-        <div className="mt-2 p-3 bg-gray-50 rounded border">
-          <p className="text-sm text-gray-700"><strong>Komentar majstora:</strong></p>
-          <p className="text-gray-600 mt-1">{report.masterComment || "Nema komentara."}</p>
+        <div className="mt-2 p-4 bg-gray-50 rounded-xl border space-y-3">
+          <p className="text-sm text-gray-700 font-medium">Komentar majstora:</p>
+          <p className="text-gray-600">{report.masterComment || "Nema komentara."}</p>
 
-          <p className="text-sm text-gray-700 mt-2"><strong>Cena:</strong> {report.cena !== undefined ? `${report.cena} RSD` : "N/A"}</p>
+          <p className="text-sm text-gray-700 font-medium mt-1">
+            Cena: {report.cena !== undefined ? `${report.cena} RSD` : "N/A"}
+          </p>
 
           <ReactionButtons
-            onReact={(r) => {
-              reportsApi.dodajReakciju(reportId, r).then(() => {
-                fetchReport();
-              }).catch((e) => {
-                console.error("Reaction error:", e);
-              });
-            }}
-          />
+  onReact={async (r) => {
+    try {
+      const res = await reportsApi.dodajReakciju(reportId, r);
+      if (res.success) {
+        fetchReport(); // osveži podatke da se vidi reakcija
+      } else {
+        alert(res.message || "Greška pri slanju reakcije");
+      }
+    } catch (e) {
+      console.error("Reaction error:", e);
+      alert("Greška pri slanju reakcije");
+    }
+  }}
+/>
+
         </div>
       )}
     </div>
   );
 }
+
+export default ReportDetalji;

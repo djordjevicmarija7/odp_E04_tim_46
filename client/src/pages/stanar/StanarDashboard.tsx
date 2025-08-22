@@ -3,11 +3,12 @@ import { useLogout } from "../../hooks/other/useLogoutHook";
 import { motion } from "framer-motion";
 import { LogOut, FileText, AlertCircle, Info } from "lucide-react";
 
+
 export default function StanarDashboard() {
   const logout = useLogout();
 
   return (
-    <main className="page-wrapper flex flex-col min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 px-4">
+    <main className="page-wrapper flex flex-col min-h-screen bg-gradient-to-br from-[#FFFBF7] via-[#FFF6EC] to-[#FFF2E0] items-center justify-center px-4">
       <header className="w-full flex justify-end py-4">
         <button
           onClick={logout}

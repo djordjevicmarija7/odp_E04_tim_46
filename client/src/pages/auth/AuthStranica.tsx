@@ -7,8 +7,8 @@ export default function AuthStranica({ authApi, onLoginSuccess }: AuthFormProps)
   const [jeRegistracija, setJeRegistracija] = useState(false);
 
   return (
-   <div id="root">
-      <div className="form-wrapper">
+    <main className="min-h-screen bg-gradient-to-br from-[#FFFBF7] via-[#FFF6EC] to-[#FFF2E0] flex items-center justify-center px-4">
+      <div className="flex flex-col items-center space-y-6 w-full max-w-md">
         {jeRegistracija ? (
           <RegistracijaForma authApi={authApi} onLoginSuccess={onLoginSuccess} />
         ) : (
@@ -17,13 +17,13 @@ export default function AuthStranica({ authApi, onLoginSuccess }: AuthFormProps)
 
         <button
           onClick={() => setJeRegistracija(!jeRegistracija)}
-          className="toggle-button"
+          className="mt-2 px-4 py-2 rounded-xl bg-white/40 backdrop-blur-lg shadow hover:brightness-105 transition text-gray-700 font-medium"
         >
           {jeRegistracija
-            ? "Imate nalog? Prijavite se"
+            ? "Već imate nalog? Prijavite se"
             : "Nemate nalog? Registrujte se"}
         </button>
       </div>
-    </div>
+    </main>
   );
 }

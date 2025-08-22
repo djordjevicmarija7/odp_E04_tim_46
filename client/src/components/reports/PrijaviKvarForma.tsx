@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import type { IReportsAPIService } from "../../api_services/reports/IReportAPIService";
 import { validacijaPrijaveKvaraClient } from "../../api_services/validators/reports/reportValidator";
+import { Send } from "lucide-react";
 
 interface Props {
   reportsApi: IReportsAPIService;
@@ -65,17 +66,15 @@ export function PrijaviKvarForma({ reportsApi }: Props) {
   };
 
   return (
-    <div>
-      <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-lg font-semibold">Nova prijava kvara</h2>
-
+    <div className="flex flex-col gap-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-semibold text-gray-800">Nova prijava kvara</h2>
         <button
           type="button"
           onClick={() => navigate(-1)}
-          aria-label="Nazad"
           className="inline-flex items-center gap-2 bg-white/60 hover:bg-white/80 text-gray-800 px-3 py-1.5 rounded-xl border border-gray-200 shadow-sm transition"
         >
-          ← Назад
+          ← Nazad
         </button>
       </div>
 
@@ -84,19 +83,19 @@ export function PrijaviKvarForma({ reportsApi }: Props) {
           value={naslov}
           onChange={(e) => setNaslov(e.target.value)}
           placeholder="Naslov prijave"
-          className="input-field"
+          className="w-full px-4 py-2 rounded-xl border border-gray-300 bg-white/40 focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
         <textarea
           value={opis}
           onChange={(e) => setOpis(e.target.value)}
           placeholder="Detaljan opis kvara..."
-          className="textarea-field h-28"
+          className="w-full px-4 py-2 rounded-xl border border-gray-300 bg-white/40 focus:outline-none focus:ring-2 focus:ring-blue-400 h-28"
         />
         <input
           value={adresa}
           onChange={(e) => setAdresa(e.target.value)}
           placeholder="Adresa"
-          className="input-field"
+          className="w-full px-4 py-2 rounded-xl border border-gray-300 bg-white/40 focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
 
         <div>
@@ -107,25 +106,32 @@ export function PrijaviKvarForma({ reportsApi }: Props) {
               <img
                 src={preview}
                 alt="preview"
-                className="w-48 h-32 object-cover rounded-md border"
+                className="w-48 h-32 object-cover rounded-xl border"
               />
             </div>
           )}
         </div>
 
-        {greska && <p className="text-red-600 font-medium">{greska}</p>}
+        {greska && <p className="text-red-700/80 font-medium">{greska}</p>}
 
         <div className="flex items-center gap-3">
-          <button type="submit" className="btn-primary w-fit" disabled={loading}>
-            {loading ? "Slanje..." : "📤 Pošalji"}
+          <button
+            type="submit"
+            className=" btn-primary flex items-center justify-center gap-2px-5 py-2 rounded-xl bg-gradient-to-r from-[#D9BFA0] to-[#C77D57] text-white font-semibold shadow hover:brightness-105 transition disabled:opacity-70"
+            disabled={loading}
+          >
+  <Send size={18} className="mr-2" />
+
+            {loading ? "Slanje..." : " Pošalji"}
           </button>
 
           <button
             type="button"
             onClick={() => navigate(-1)}
-            className="inline-flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-800 px-3 py-1.5 rounded-xl border border-gray-200 transition"
-          >
-            Откажи
+            className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-white/60 hover:bg-white/80 text-gray-800 border border-gray-200 shadow-sm transition"
+>
+          
+            Otkaži
           </button>
         </div>
       </form>

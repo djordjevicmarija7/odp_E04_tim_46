@@ -20,7 +20,8 @@
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.540.0",
     "multer": "^2.0.2",
-    "mysql2": "^3.14.1"
+    "mysql2": "^3.14.1",
+    "phosphor-react": "^1.4.1"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",

@@ -1,5 +1,7 @@
+// src/components/reports/FinishReportForm.tsx
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Save, X } from "lucide-react";
 import type { IReportsAPIService } from "../../api_services/reports/IReportAPIService";
 import { buildImageUrl } from "../../helpers/BuildImageUrl";
 import { validacijaZavrsiPrijavu } from "../../api_services/validators/reports/FinishReportVslidator";
@@ -23,19 +25,28 @@ export function FinishReportForm({ reportsApi, reportId }: Props) {
 
   useEffect(() => {
     let mounted = true;
-    reportsApi.getPrijavaById(reportId).then((res) => {
-      if (!mounted) return;
-      if (res.success && res.data) {
-        setReportImage(buildImageUrl(res.data.imagePath));
-        setNaslov(res.data.naslov || "");
-        setOpis(res.data.opis || "");
-        setKomentar(res.data.masterComment ?? "");
-        setCena(res.data.cena !== undefined && res.data.cena !== null ? Number(res.data.cena) : "");
-      }
-    }).catch((e) => {
-      console.error("Error fetching report:", e);
-    });
-    return () => { mounted = false; };
+    reportsApi
+      .getPrijavaById(reportId)
+      .then((res) => {
+        if (!mounted) return;
+        if (res.success && res.data) {
+          setReportImage(buildImageUrl(res.data.imagePath));
+          setNaslov(res.data.naslov || "");
+          setOpis(res.data.opis || "");
+          setKomentar(res.data.masterComment ?? "");
+          setCena(
+            res.data.cena !== undefined && res.data.cena !== null
+              ? Number(res.data.cena)
+              : ""
+          );
+        }
+      })
+      .catch((e) => {
+        console.error("Error fetching report:", e);
+      });
+    return () => {
+      mounted = false;
+    };
   }, [reportId, reportsApi]);
 
   const zavrsi = async (e?: React.FormEvent) => {
@@ -70,69 +81,80 @@ export function FinishReportForm({ reportsApi, reportId }: Props) {
   };
 
   return (
-    <form onSubmit={zavrsi} className="grid gap-4">
-      {reportImage && (
+    <form onSubmit={zavrsi} className="space-y-6">
+      <div className="bg-white rounded-2xl shadow-lg p-6 border border-[color:var(--nude-200)] space-y-4">
+        {reportImage && (
+          <img
+            src={reportImage}
+            alt="report"
+            className="w-full h-64 object-cover rounded-xl border shadow-sm"
+          />
+        )}
+
         <div>
-          <label className="text-sm font-medium text-gray-700">Slika prijave</label>
-          <img src={reportImage} alt="report" className="w-72 h-48 object-cover rounded-md border mb-3" />
+          <h2 className="text-xl font-semibold text-[color:var(--text-900)] mb-1">{naslov}</h2>
+          <p className="text-[color:var(--muted)] whitespace-pre-line">{opis}</p>
         </div>
-      )}
+      </div>
 
-      <label className="text-sm text-gray-700">Naslov prijave</label>
-<p className="bg-gray-100 p-2 rounded">{naslov}</p>
+      <div className="bg-white rounded-2xl shadow-lg p-6 border border-[color:var(--nude-200)] space-y-4">
+        <h3 className="text-lg font-semibold text-[color:var(--text-900)]">Izveštaj majstora</h3>
 
-<label className="text-sm text-gray-700">Opis prijave</label>
-<p className="bg-gray-100 p-2 rounded whitespace-pre-line">{opis}</p>
+        <label className="block text-sm text-[color:var(--text-900)] mb-1">Komentar</label>
+        <textarea
+          value={komentar}
+          onChange={(e) => setKomentar(e.target.value)}
+          rows={4}
+          className="w-full rounded-xl border p-3 shadow-sm focus:ring-2 focus:ring-[#C77D57]"
+          placeholder="Opiši radove koje si uradio (obavezno)"
+        />
 
-      <label className="text-sm text-gray-700">Komentar majstora</label>
-      <textarea
-        value={komentar}
-        onChange={e => setKomentar(e.target.value)}
-        placeholder="Komentar majstora"
-        className="textarea-field"
-        rows={5}
-      />
+        <label className="block text-sm text-[color:var(--text-900)] mb-1">Cena (RSD)</label>
+        <input
+          type="number"
+          value={cena}
+          onChange={(e) => setCena(e.target.value === "" ? "" : Number(e.target.value))}
+          className="w-40 rounded-xl border p-3 shadow-sm focus:ring-2 focus:ring-[#C77D57]"
+          min={0}
+          step="1"
+          placeholder="npr. 1200"
+        />
 
-      <label className="text-sm text-gray-700">Cijena (din)</label>
-      <input
-        type="number"
-        value={cena}
-        onChange={e => setCena(e.target.value === "" ? "" : Number(e.target.value))}
-        placeholder="Cena (дин)"
-        className="input-field"
-        min={0}
-      />
-
-      <label className="text-sm text-gray-700">Ishod</label>
-      <select
-        value={ishod ? "saniran" : "nerez"}
-        onChange={e => setIshod(e.target.value === "saniran")}
-        className="input-field"
-      >
-        <option value="saniran">Saniran</option>
-        <option value="nerez">Problem nije rešen</option>
-      </select>
-
-      {error && <p className="text-sm text-red-500">{error}</p>}
-
-      <div className="flex items-center gap-3">
-        <button
-          type="submit"
-          className="btn-primary w-fit"
-          disabled={loading}
+        <label className="block text-sm text-[color:var(--text-900)] mb-1">Ishod</label>
+        <select
+          value={ishod ? "saniran" : "nerez"}
+          onChange={(e) => setIshod(e.target.value === "saniran")}
+          className="w-full rounded-xl border p-3 shadow-sm focus:ring-2 focus:ring-[#C77D57]"
         >
-          {loading ? "Šaljem..." : "💾 Sačuvaj i vrati se na listu"}
-        </button>
+          <option value="saniran">Saniran</option>
+          <option value="nerez">Problem nije rešen</option>
+        </select>
 
-        <button
-          type="button"
-          className="btn-secondary"
-          onClick={() => navigate("/majstor-dashboard/sve-prijave")}
-          disabled={loading}
-        >
-          Откажи
-        </button>
+        {error && <p className="text-sm text-red-600">{error}</p>}
+
+        <div className="flex items-center gap-3">
+          <button
+            type="submit"
+            className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-gradient-to-r from-[#D9BFA0] to-[#C77D57] text-white font-semibold shadow hover:shadow-md transition disabled:opacity-60"
+            disabled={loading}
+          >
+            <Save size={16} />
+            {loading ? "Šaljem..." : "Sačuvaj izveštaj"}
+          </button>
+
+          <button
+            type="button"
+            onClick={() => navigate("/majstor-dashboard/sve-prijave")}
+            className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl border border-[#D9BFA0] bg-white text-[color:var(--text-900)] font-medium shadow-sm hover:bg-[#FFF8F3] transition"
+            disabled={loading}
+          >
+            <X size={16} />
+            Otkaži
+          </button>
+        </div>
       </div>
     </form>
   );
 }
+
+export default FinishReportForm;

@@ -1,78 +1,203 @@
+/* src/index.css */
+
+/* Tailwind imports (standardno) */
 @import "tailwindcss";
-/* Tailwind v4 imports */
-@import "tailwindcss/preflight";
-@import "tailwindcss/utilities";
-
-/* 🌟 Global layout */
-body {
-  @apply bg-gray-50 text-gray-800 font-sans;
+@tailwind utilities;
+/* ---------- Palette & global CSS variables ---------- */
+:root {
+  --nude-50: #FFF8F3;
+  --nude-100: #F7ECE2;
+  --nude-200: #F0E0CF;
+  --nude-300: #E7D2BA;
+  --nude-400: #D9BFA0;
+  --nude-500: #C77D57; /* primary accent */
+  --nude-600: #A65B3B;
+  --nude-700: #8A4A31;
+  --text-900: #5B4636;
+  --muted: #7A6A5B;
+  --card-shadow: 0 10px 30px rgba(91,70,54,0.08);
 }
 
+/* ---------- Global layout reset & safety fixes ---------- */
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background: var(--nude-50);
+  color: var(--text-900);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+               "Noto Sans", "Liberation Sans", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+}
+
+/* Centralni container koji se koristi kroz ceo projekat.
+   Koristi ga u JSX kao <div className="page-wrapper"> ... </div>
+   ili Grade global layout nad rootom. */
 .page-wrapper {
-  @apply max-w-5xl mx-auto p-6;
+  @apply w-full max-w-6xl mx-auto px-4 py-6;
+  box-sizing: border-box;
+  display: block;
 }
 
-/* 🌟 Naslovi */
+/* Ensure first direct child of root is constrained and centered as extra safety */
+#root > * {
+  width: 100%;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+}
+
+/* ---------- Typography (headings) ---------- */
 h1 {
-  @apply text-3xl font-bold mb-6 text-gray-900;
+  @apply text-3xl md:text-4xl font-serif font-bold mb-4;
+  color: var(--text-900);
 }
 
 h2 {
-  @apply text-2xl font-semibold mb-4 text-gray-800;
+  @apply text-2xl md:text-3xl font-semibold mb-3;
+  color: var(--text-900);
 }
 
 h3 {
-  @apply text-xl font-semibold mb-2 text-gray-700;
+  @apply text-xl font-semibold mb-2;
+  color: var(--text-900);
 }
 
-/* 🌟 Dugmad */
+/* ---------- Buttons (nude palette, primary & secondary) ---------- */
+/* Primary CTA — veliki, bold i uočljiv */
 .btn-primary {
-  @apply px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold 
-         shadow hover:bg-blue-700 transition;
+  @apply inline-flex items-center gap-3 px-6 py-3 rounded-3xl text-white font-semibold shadow-lg;
+  background: linear-gradient(90deg, var(--nude-400), var(--nude-500));
+  transition: transform .18s ease, box-shadow .18s ease;
+  box-shadow: 0 12px 30px rgba(103,63,42,0.12);
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 40px rgba(91,70,54,0.12);
 }
 
+/* Secondary button — neutral, elegant */
 .btn-secondary {
-  @apply px-4 py-2 rounded-lg bg-gray-200 text-gray-800 font-medium 
-         hover:bg-gray-300 transition;
+  @apply inline-flex items-center gap-2 px-4 py-2 rounded-2xl text-[color:var(--text-900)] font-medium shadow-sm bg-white border;
+  border-color: rgba(91,70,54,0.06);
+}
+.btn-secondary:hover {
+  @apply bg-[color:var(--nude-100)];
 }
 
-button:disabled {
+/* Disabled state */
+button:disabled,
+.btn-disabled {
   @apply opacity-50 cursor-not-allowed;
 }
 
-/* 🌟 Input polja */
+/* ---------- Inputs, selects, textarea ---------- */
 input, textarea, select {
-  @apply border border-gray-300 rounded-lg px-3 py-2 w-full 
-         focus:outline-none focus:ring-2 focus:ring-blue-500 
-         shadow-sm bg-white;
+  @apply border rounded-xl px-3 py-2 w-full focus:outline-none shadow-sm;
+  border-color: rgba(91,70,54,0.08);
+  background: white;
+  color: var(--text-900);
+}
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  box-shadow: 0 8px 20px rgba(167,121,91,0.06);
+  border-color: rgba(167,121,91,0.22);
 }
 
+/* textarea specifics */
 textarea {
-  @apply resize-none min-h-[100px];
+  @apply resize-none min-h-[100px] rounded-xl;
 }
 
-/* 🌟 Error poruke */
+/* ---------- Error text ---------- */
 .error-text {
   @apply text-red-600 text-sm mt-1;
 }
 
-/* 🌟 Card za prikaz prijava */
+/* ---------- Report card styling ---------- */
 .report-card {
-  @apply border rounded-lg shadow-sm bg-white p-4 mb-4 
-         hover:shadow-md transition;
+  @apply bg-white rounded-2xl overflow-hidden border border-transparent transition-shadow;
+  box-shadow: var(--card-shadow);
+}
+.report-card:hover {
+  box-shadow: 0 18px 40px rgba(91,70,54,0.12);
 }
 
+/* Grid for report list — responsive and centered */
 .report-list {
-  @apply grid gap-4;
+  @apply grid gap-6 sm:grid-cols-2 lg:grid-cols-3;
+  justify-items: center;
 }
 
-/* 🌟 Filter bar */
+/* If you want cards to stretch, inside ReportList map container use w-full */
+.report-card > * {
+  box-sizing: border-box;
+}
+
+/* ---------- Filter bar & search styling ---------- */
 .filter-bar {
-  @apply mb-6 flex justify-center;
+  @apply w-full flex justify-center mb-4;
 }
 
-/* 🌟 Reaction buttons */
-.reaction-buttons button {
-  @apply text-lg px-3 py-1 rounded-full border shadow-sm bg-white 
-         hover:bg-gray-100 transition;
+/* Search input override to be full-width and elevated */
+.search-input {
+  @apply w-full rounded-3xl px-12 py-3 shadow-sm border-0;
+  background: white;
+  color: var(--text-900);
 }
+
+/* ---------- Reaction buttons (modern) ---------- */
+.reaction-buttons {
+  @apply flex gap-3 mt-3;
+}
+.reaction-buttons button {
+  @apply inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-white shadow-sm border;
+  border-color: rgba(91,70,54,0.06);
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.reaction-buttons button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(91,70,54,0.08);
+}
+
+/* ---------- Status badge (bigger & refined) ---------- */
+.status-badge {
+  @apply inline-block text-sm md:text-base font-semibold px-4 py-1.5 rounded-full;
+}
+.status-open { background: #F6EDE6; color: #8A4A31; }       /* Kreiran / Otvoreno */
+.status-inprogress { background: #FFF3E8; color: #C77D57; } /* Popravka u toku */
+.status-done { background: #E9F4EA; color: #2F7A4B; }       /* Sanirano */
+.status-problem { background: #FDEAEA; color: #A63B3B; }    /* Problem nije rešen */
+
+/* ---------- Empty state & CTA stylings ---------- */
+.empty-state {
+  @apply bg-white rounded-2xl p-10 text-center shadow;
+  max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.empty-state .btn-primary {
+  @apply px-5 py-3 rounded-3xl;
+}
+
+/* ---------- Small utility helpers ---------- */
+.truncate-2 { @apply truncate; }
+.line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+
+/* ---------- Safety: prevent accidental full-page flex forcing a gap on the right ---------- */
+/* If some parent mistakenly sets body > .flex or justify-end, neutralize it for our main container */
+body > * {
+  box-sizing: border-box;
+  max-width: 100%;
+}
+@layer base {
+  button {
+    @apply cursor-pointer;
+  }
+}
+
+
+/* ---------- End of file ---------- */

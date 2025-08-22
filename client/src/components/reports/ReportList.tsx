@@ -1,20 +1,17 @@
-import { ReportCard } from "./ReportCard";
+// src/components/reports/ReportList.tsx
 import type { ReportDto } from "../../models/reports/ReportDto";
+import { ReportCard } from "./ReportCard";
 
 interface Props {
   reports: ReportDto[];
 }
 
-export function ReportList({ reports }: Props) {
-  if (!reports || reports.length === 0) {
-    return <p className="text-center text-gray-500 italic">Nema prijava</p>;
-  }
-
+export default function ReportList({ reports }: Props) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <>
       {reports.map((r) => (
         <ReportCard key={r.id} report={r} />
       ))}
-    </div>
+    </>
   );
 }

@@ -1,12 +1,18 @@
+// src/components/reports/ReportCard.tsx
+import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+import { DollarSign } from "lucide-react";
 import { reportsApi } from "../../api_services/reports/ReportAPIService";
 import { ReactionButtons } from "../../components/reports/ReactionButtons";
 import type { ReportDto } from "../../models/reports/ReportDto";
+import StatusBadge from "./StatusBadge";
 
 interface Props {
   report: ReportDto;
 }
 
 export function ReportCard({ report }: Props) {
+  const navigate = useNavigate();
   const API_URL = import.meta.env.VITE_API_URL;
   const imageUrl = report.imagePath ? `${API_URL}${report.imagePath}` : null;
 
@@ -25,39 +31,66 @@ export function ReportCard({ report }: Props) {
   }
 
   return (
-    <div className="bg-white shadow-lg rounded-xl overflow-hidden border border-gray-200 hover:shadow-2xl transition-shadow duration-300">
-      {imageUrl ? (
-        <img
-          src={imageUrl}
-          alt={report.naslov}
-          className="w-full h-48 object-cover"
-        />
-      ) : (
-        <div className="w-full h-48 flex items-center justify-center bg-gray-100 text-gray-500">
-          📷 Nema slike
+    <motion.article
+      layout
+      whileHover={{ translateY: -8 }}
+      className="bg-white rounded-2xl overflow-hidden border border-transparent"
+      style={{ boxShadow: "var(--card-shadow)" }}
+    >
+      <div
+        className="w-full h-44 bg-gray-100 overflow-hidden relative cursor-pointer"
+        onClick={() => navigate(`/prijava/${report.id}`)}
+      >
+        {imageUrl ? (
+          <img src={imageUrl} alt={report.naslov || "prijava"} className="w-full h-full object-cover" />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center bg-[#F0E0CF] text-[color:var(--muted)]">
+            <span className="text-sm">📷 Nema slike</span>
+          </div>
+        )}
+
+        <div className="absolute left-4 top-4">
+          <StatusBadge status={report.status} />
         </div>
-      )}
+      </div>
 
-      <div className="p-4 flex flex-col gap-2">
-        <h3 className="text-xl font-semibold text-gray-800">{report.naslov}</h3>
-        <p className="text-gray-600 text-sm whitespace-pre-line">{report.opis}</p>
+      <div className="p-4 flex flex-col gap-3">
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <h3 className="text-lg font-semibold text-[color:var(--text-900)] truncate" title={report.naslov}>
+              {report.naslov}
+            </h3>
+            <p className="text-sm text-[color:var(--muted)] mt-1 line-clamp-3 whitespace-pre-line">
+              {report.opis}
+            </p>
+          </div>
 
-        <div className="flex justify-between items-center mt-2 text-sm text-gray-700">
-          <span>Status: <span className="font-medium">{report.status}</span></span>
-          {report.cena !== undefined && (
-            <span className="font-semibold text-blue-600">Cena: {report.cena} din</span>
-          )}
+          <div className="flex flex-col items-end gap-2">
+            <span className="text-xs text-[color:var(--muted)]">
+              {report.createdAt ? new Date(report.createdAt).toLocaleDateString() : ""}
+            </span>
+            <div className="flex items-center gap-2">
+              <DollarSign size={14} className="text-[color:var(--muted)]" />
+              <span className="text-sm font-medium text-[color:var(--text-900)]">
+                {report.cena !== undefined && report.cena !== null ? `${report.cena} din` : "Bez troška"}
+              </span>
+            </div>
+          </div>
         </div>
 
         {report.status === "Saniran" && (
-          <>
-            <p className="mt-2 text-sm text-gray-700">
-              💬 Komentar majstora: {report.masterComment || "Nema komentara"}
+          <div className="pt-2 border-t border-transparent">
+            <p className="text-sm text-[color:var(--text-900)]">
+              <span className="font-medium">💬 Komentar majstora: </span>
+              <span className="text-[color:var(--muted)]">{report.masterComment || "Nema komentara"}</span>
             </p>
-            <ReactionButtons onReact={handleReact} />
-          </>
+
+            <div className="mt-3">
+              <ReactionButtons onReact={(r) => handleReact(r as "like" | "dislike" | "neutral")} />
+            </div>
+          </div>
         )}
       </div>
-    </div>
+    </motion.article>
   );
 }
