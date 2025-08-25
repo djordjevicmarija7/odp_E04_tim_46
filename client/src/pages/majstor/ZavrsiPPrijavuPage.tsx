@@ -1,4 +1,3 @@
-// src/pages/majstor/ZavrsiPrijavuPage.tsx
 import { useParams } from "react-router-dom";
 import { ClipboardCheck } from "lucide-react";
 import { FinishReportForm } from "../../components/reports/FinishReportForm";

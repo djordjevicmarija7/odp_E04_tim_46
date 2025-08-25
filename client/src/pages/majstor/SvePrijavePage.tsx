@@ -1,4 +1,3 @@
-// src/pages/majstor/SvePrijavePage.tsx
 import { motion } from "framer-motion";
 import { ClipboardList } from "lucide-react";
 import { MasterReportFilterPanel } from "../../components/reports/MasterReportFilterPanel";
@@ -8,7 +7,7 @@ export default function SvePrijavePage() {
   return (
     <main className="min-h-screen py-10" style={{ background: "linear-gradient(180deg, #FFF8F3 0%, #F7ECE2 100%)" }}>
       <div className="max-w-6xl mx-auto w-full px-4">
-        {/* header */}
+
         <header className="w-full flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-8">
           <motion.h1
             initial={{ opacity: 0, y: -6 }}

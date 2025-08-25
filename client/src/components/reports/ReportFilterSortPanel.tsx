@@ -1,4 +1,3 @@
-// src/components/reports/ReportFilterSortPanel.tsx
 import { useEffect, useState, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import type { ReportDto } from "../../models/reports/ReportDto";
@@ -13,9 +12,16 @@ interface Props {
     sortBy: "createdAt" | "cena";
     order: "ASC" | "DESC";
   }) => Promise<{ success: boolean; data?: ReportDto[] }>;
+
+  onReaction?: (reportId: number, reactionType: string) => void;
+  highlightedReports?: number[];
 }
 
-export default function ReportFilterSortPanel({ fetchFn }: Props) {
+export default function ReportFilterSortPanel({
+  fetchFn,
+  onReaction,
+  highlightedReports,
+}: Props) {
   const navigate = useNavigate();
 
   const [reports, setReports] = useState<ReportDto[]>([]);
@@ -53,10 +59,8 @@ export default function ReportFilterSortPanel({ fetchFn }: Props) {
   }, [reports, search]);
 
   return (
-    // wrapper koji centrirа grid na strani
     <div className="w-full flex justify-center">
       <div className="w-full max-w-6xl px-4 space-y-6">
-        {/* kontrolni red */}
         <div className="flex items-center justify-between gap-4">
           <div>
             <button
@@ -68,7 +72,13 @@ export default function ReportFilterSortPanel({ fetchFn }: Props) {
           </div>
           <div>
             <button
-              onClick={fetchReports}
+              onClick={() => {
+                try {
+                  localStorage.removeItem("reportReactions");
+                } catch (e) {
+                }
+                fetchReports();
+              }}
               className="inline-flex items-center gap-2 bg-white px-3 py-2 rounded-xl shadow-sm"
             >
               <RefreshCw size={16} />
@@ -77,12 +87,10 @@ export default function ReportFilterSortPanel({ fetchFn }: Props) {
           </div>
         </div>
 
-        {/* centrirani search */}
         <div className="w-full">
           <FilterBar onSearch={setSearch} />
         </div>
 
-        {/* filter + sort (ispod search) */}
         <div className="bg-[#F0E0CF] rounded-2xl p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
           <div className="flex items-center gap-3 w-full md:w-1/2">
             <Funnel size={18} className="text-[#A65B3B]" />
@@ -123,7 +131,6 @@ export default function ReportFilterSortPanel({ fetchFn }: Props) {
           </div>
         </div>
 
-        {/* content grid centriran */}
         <div>
           <AnimatePresence>
             {loading ? (
@@ -153,7 +160,11 @@ export default function ReportFilterSortPanel({ fetchFn }: Props) {
               </motion.div>
             ) : (
               <motion.div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 justify-center">
-                <ReportList reports={filtered} />
+                <ReportList
+                  reports={filtered}
+                  onReaction={onReaction}
+                  highlightedReports={highlightedReports}
+                />
               </motion.div>
             )}
           </AnimatePresence>

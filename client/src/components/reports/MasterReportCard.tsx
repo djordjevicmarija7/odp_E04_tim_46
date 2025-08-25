@@ -1,4 +1,3 @@
-// src/components/reports/MasterReportCard.tsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -11,9 +10,17 @@ interface Props {
   report: ReportDto;
   reportsApi: IReportsAPIService;
   onRefresh?: () => void;
+  onReaction?: (reportId: number, tip: "like" | "dislike" | "neutral") => void;
+  isHighlighted?: boolean;
 }
 
-export function MasterReportCard({ report, reportsApi, onRefresh }: Props) {
+export function MasterReportCard({
+  report,
+  reportsApi,
+  onRefresh,
+  onReaction,    
+  isHighlighted = false,
+}: Props) {
   const [loadingAccept, setLoadingAccept] = useState(false);
   const navigate = useNavigate();
   const API_URL = import.meta.env.VITE_API_URL;
@@ -25,7 +32,6 @@ export function MasterReportCard({ report, reportsApi, onRefresh }: Props) {
     try {
       const res = await reportsApi.prihvatiPrijavu(report.id);
       if (res.success) {
-        // ponašanje ne menjano: navigacija na formu i osveženje liste
         navigate(`/majstor-dashboard/zavrsi-prijavu/${report.id}`);
         if (onRefresh) onRefresh();
       } else {
@@ -42,12 +48,14 @@ export function MasterReportCard({ report, reportsApi, onRefresh }: Props) {
 
   return (
     <motion.article
-  layout
-  whileHover={{ translateY: -8 }}
-  className="w-full bg-white rounded-2xl overflow-hidden border border-transparent"
-  style={{ boxShadow: "var(--card-shadow)" }}
+      layout
+      whileHover={{ translateY: -8 }}
+      className={`w-full bg-white rounded-2xl overflow-hidden border transition
+        ${isHighlighted ? "border-amber-400 ring-2 ring-amber-200" : "border-transparent"}`}
+      style={{ boxShadow: "var(--card-shadow)" }}
     >
-      <div className="w-full h-44 bg-gray-100 overflow-hidden relative cursor-pointer"
+      <div
+        className="w-full h-44 bg-gray-100 overflow-hidden relative cursor-pointer"
         onClick={() => navigate(`/majstor-dashboard/zavrsi-prijavu/${report.id}`)}
       >
         {imageUrl ? (
@@ -92,18 +100,18 @@ export function MasterReportCard({ report, reportsApi, onRefresh }: Props) {
             <button
               onClick={handleAccept}
               disabled={loadingAccept}
-              className=" inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-gradient-to-r from-[#D9BFA0] to-[#C77D57] text-white text-sm font-semibold shadow hover:shadow-md transition disabled:opacity-60"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-gradient-to-r from-[#D9BFA0] to-[#C77D57] text-white text-sm font-semibold shadow hover:shadow-md transition disabled:opacity-60"
             >
               <CheckCircle size={16} />
-              {loadingAccept ? "Prihvatanje..." : " Prihvati prijavu"}
+              {loadingAccept ? "Prihvatanje..." : "Prihvati prijavu"}
             </button>
           ) : (
             <button
               onClick={() => navigate(`/majstor-dashboard/zavrsi-prijavu/${report.id}`)}
-              className="inline-flex tems-center gap-2 px-3 py-1 rounded-2xl border border-[#D9BFA0] bg-white text-[color:var(--text-900)] text-sm font-medium shadow-sm hover:bg-[#FFF8F3] transition"
+              className="inline-flex items-center gap-2 px-3 py-1 rounded-2xl border border-[#D9BFA0] bg-white text-[color:var(--text-900)] text-sm font-medium shadow-sm hover:bg-[#FFF8F3] transition"
             >
               <Pencil size={16} className="text-[#5B4636]" />
-               Ažuriraj izveštaj
+              Ažuriraj izveštaj
             </button>
           )}
         </div>

@@ -1,4 +1,3 @@
-// src/components/reports/StatusBadge.tsx
 interface Props {
   status?: string;
 }

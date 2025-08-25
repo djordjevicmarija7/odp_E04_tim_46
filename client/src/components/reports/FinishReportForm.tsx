@@ -1,4 +1,3 @@
-// src/components/reports/FinishReportForm.tsx
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Save, X } from "lucide-react";
